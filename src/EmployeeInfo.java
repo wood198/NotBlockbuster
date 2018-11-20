@@ -45,7 +45,7 @@ public class EmployeeInfo {
         try {
             //TODO figure out if thats how TXNs actually work
             START TRANSACTION;
-            PreparedStatement stat = c.getDBConnection().prepareStatement(" INSERT INTO employee (emFirstName, emLastName, emEmail, emAddress, emPhone, idjob)"
+            PreparedStatement stat = c.getDBConnection().prepareStatement(" INSERT INTO employee(emFirstName, emLastName, emEmail, emAddress, emPhone, idjob)"
                     + " VALUES (?, ?, ?, ?, ?, ?)");
 
             stat.setString(1, first_name);

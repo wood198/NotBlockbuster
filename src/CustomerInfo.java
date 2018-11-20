@@ -31,7 +31,7 @@ public class CustomerInfo {
         try {
             //TODO figure out if thats how TXNs actually work
             START TRANSACTION;
-            PreparedStatement stat = c.getDBConnection().prepareStatement(" INSERT INTO student (cusFirstName, cusLastName, cusEmail, cusAddress, cusPhone)"
+            PreparedStatement stat = c.getDBConnection().prepareStatement(" INSERT INTO student(cusFirstName, cusLastName, cusEmail, cusAddress, cusPhone)"
                     + " VALUES (?, ?, ?, ?, ?)");
 
             stat.setString(1, first_name);
