@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class WelcomeUser {
 
     public static void main(String args[]) throws Exception{
+
         WelcomeUser w = new WelcomeUser();
         Search s = new Search();
         CustomerInfo c = new CustomerInfo();
@@ -56,13 +57,13 @@ public class WelcomeUser {
                            "0. Quit");
     }
 
-    private static String getString(String input) {
+    public static String getString(String input) {
         System.out.print(input);
         Scanner temp = new Scanner(System.in);
         return temp.nextLine();
     }
 
-    private static float getFloat(String input) {
+    public static float getFloat(String input) {
         while (true) {
             String temp = getString(input);
             try {
@@ -74,7 +75,7 @@ public class WelcomeUser {
         }
     }
 
-    private static int getInt(String input) {
+    public static int getInt(String input) {
         while (true) {
             String temp = getString(input);
             try {

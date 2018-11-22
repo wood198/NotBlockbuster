@@ -3,9 +3,12 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class CustomerInfo {
+
+    DBConnect c = new DBConnect();
+    WelcomeUser w = new WelcomeUser();
+
     public void createCustomer() throws Exception {
 
-        DBConnect c = new DBConnect();
         Scanner in = new Scanner(System.in);
 
         String first_name = "";
@@ -30,9 +33,8 @@ public class CustomerInfo {
         //TODO change the SQL statement when we figure out databases
         try {
             //TODO figure out if thats how TXNs actually work
-            START TRANSACTION;
-            PreparedStatement stat = c.getDBConnection().prepareStatement(" INSERT INTO student(cusFirstName, cusLastName, cusEmail, cusAddress, cusPhone)"
-                    + " VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement stat = c.getDBConnection().prepareStatement(" START TRANSACTION INSERT INTO student(cusFirstName, cusLastName, cusEmail, cusAddress, cusPhone)"
+                    + " VALUES (?, ?, ?, ?, ?) COMMIT OR ROLLBACK");
 
             stat.setString(1, first_name);
             stat.setString(2, last_name);
@@ -41,9 +43,9 @@ public class CustomerInfo {
             stat.setInt(5, phone);
 
             stat.execute();
-            COMMIT;
 
             System.out.println("New customer added!");
+
         }catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
