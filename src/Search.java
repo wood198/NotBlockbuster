@@ -10,7 +10,7 @@ public class Search {
     public void printInStock() throws Exception {
         try{
             //Print all the movies in stock
-            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT * FROM stockdetails " +
+            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title, Price FROM stockdetails " +
                     "FULL OUTER JOIN movieforms ON stockdetails.idmovie = movieforms.idmovie WHERE InStock = 1, CheckedOut = 0");
             ResultSet rs = stat.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -36,7 +36,7 @@ public class Search {
     public void printCheckedOut() throws Exception {
         try{
             //Print all the movies in stock
-            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT * FROM stockdetails " +
+            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title, Price FROM stockdetails " +
                     "FULL OUTER JOIN movieforms ON stockdetails.idmovie = movieforms.idmovie WHERE CheckedOut = 1, InStock = 0");
             ResultSet rs = stat.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -61,7 +61,7 @@ public class Search {
     public void printAll() throws Exception {
         try{
             //Print all the movies whether or not they are in stock
-            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT * FROM stockdetails");
+            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title, Price FROM stockdetails");
             ResultSet rs = stat.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();

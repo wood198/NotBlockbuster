@@ -1,9 +1,8 @@
-//import com.mysql.cj.x.protobuf.MysqlxCrud;
-
 import java.util.Scanner;
 
 public class WelcomeUser {
-    public static void main(String args[]) throws Exception{
+
+    public static void main(String[] args) throws Exception{
 
         WelcomeUser w = new WelcomeUser();
         Search s = new Search();
