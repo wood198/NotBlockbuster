@@ -19,7 +19,7 @@ public class CustomerInfo {
         System.out.println("Please enter your last name: ");
         last_name = in.nextLine();
         System.out.println("Please enter your email: ");
-        email_input = in.nextline();
+        email_input = in.nextLine();
         System.out.println("Please enter your address: ");
         address_input = in.nextLine();
         System.out.println("Pleas enter your phone number with no dashes: ");

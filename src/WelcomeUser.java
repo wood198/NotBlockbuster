@@ -5,14 +5,17 @@ import java.util.Scanner;
 public class WelcomeUser {
 
     public static void main(String args[]) throws Exception{
+        WelcomeUser w = new WelcomeUser();
         Search s = new Search();
+        CustomerInfo c = new CustomerInfo();
+        Returns r = new Returns();
 
         boolean loop = true;
 
         System.out.println("---- Welcome to Not Blockbuster! ----\n\n");
 
         while(loop) {
-            displayMenu();
+            w.displayMenu();
             int x = getInt("Please Enter a Menu Option: ");
 
             switch(x) {
@@ -22,10 +25,19 @@ public class WelcomeUser {
                     break;
                 case(1): //Print All (In-Stock) Movies
                     s.printInStock();
+                    break;
                 case(2): //Print All (Checked Out) Movies
+                    s.printCheckedOut();
+                    break;
                 case(3): //Print All Movies
+                    s.printAll();
+                    break;
                 case(4): //Print Movies by Genre
+                    s.printByGenre();
+                    break;
                 case(5): //Search for Movie
+                    s.searchMovie();
+                    break;
                 case(6): //Rent Movie
                 case(7): //Return Movie
             }
