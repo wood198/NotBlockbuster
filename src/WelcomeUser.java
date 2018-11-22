@@ -3,7 +3,6 @@
 import java.util.Scanner;
 
 public class WelcomeUser {
-
     public static void main(String args[]) throws Exception{
 
         WelcomeUser w = new WelcomeUser();
@@ -41,6 +40,8 @@ public class WelcomeUser {
                     break;
                 case(6): //Rent Movie
                 case(7): //Return Movie
+                    r.returnMovie();
+                    break;
             }
         }
     }
@@ -86,5 +87,4 @@ public class WelcomeUser {
             }
         }
     }
-
 }

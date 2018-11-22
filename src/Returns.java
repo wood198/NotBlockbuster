@@ -6,7 +6,7 @@ public class Returns {
     DBConnect c = new DBConnect();
     WelcomeUser w = new WelcomeUser();
 
-    public void returnRental() throws Exception {
+    public void returnMovie() throws Exception {
 
         Scanner in = new Scanner(System.in);
 
