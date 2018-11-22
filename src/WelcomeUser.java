@@ -25,20 +25,17 @@ public class WelcomeUser {
                 case(1): //Print All (In-Stock) Movies
                     s.printInStock();
                     break;
-                case(2): //Print All (Checked Out) Movies
-                    s.printCheckedOut();
-                    break;
-                case(3): //Print All Movies
+                case(2): //Print All Movies
                     s.printAll();
                     break;
-                case(4): //Print Movies by Genre
+                case(3): //Print Movies by Genre
                     s.printByGenre();
                     break;
-                case(5): //Search for Movie
+                case(4): //Search for Movie
                     s.searchMovie();
                     break;
-                case(6): //Rent Movie
-                case(7): //Return Movie
+                case(5): //Rent Movie
+                case(6): //Return Movie
                     r.returnMovie();
                     break;
             }
@@ -48,12 +45,11 @@ public class WelcomeUser {
     public void displayMenu() {
         System.out.println("Not Blockbuster Menu: \n" +
                            "1. Print All (In-Stock) Movies \n" +
-                           "2. Print All (Checked Out) Movies \n" +
-                           "3. Print All Movies \n" +
-                           "4. Print Movies by Genre \n" +
-                           "5. Search for Movie \n" +
-                           "6. Rent Movie \n" +
-                           "7. Return Movie \n" +
+                           "2. Print All Movies \n" +
+                           "3. Search by Genre \n" +
+                           "4. Search for Movie \n" +
+                           "5. Rent Movie \n" +
+                           "6. Return Movie \n" +
                            "0. Quit");
     }
 
