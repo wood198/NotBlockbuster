@@ -1,11 +1,77 @@
-import com.mysql.cj.x.protobuf.MysqlxCrud;
+//import com.mysql.cj.x.protobuf.MysqlxCrud;
 
 import java.util.Scanner;
 
 public class WelcomeUser {
 
     public static void main(String args[]) throws Exception{
+        Search s = new Search();
 
+        boolean loop = true;
+
+        System.out.println("---- Welcome to Not Blockbuster! ----\n\n");
+
+        while(loop) {
+            displayMenu();
+            int x = getInt("Please Enter a Menu Option: ");
+
+            switch(x) {
+                case(0): //Quit
+                    System.out.println("---- EXITING PROGRAM ----");
+                    loop = false;
+                    break;
+                case(1): //Print All (In-Stock) Movies
+                    s.printInStock();
+                case(2): //Print All (Checked Out) Movies
+                case(3): //Print All Movies
+                case(4): //Print Movies by Genre
+                case(5): //Search for Movie
+                case(6): //Rent Movie
+                case(7): //Return Movie
+            }
+        }
+    }
+
+    public void displayMenu() {
+        System.out.println("Not Blockbuster Menu: \n" +
+                           "1. Print All (In-Stock) Movies \n" +
+                           "2. Print All (Checked Out) Movies \n" +
+                           "3. Print All Movies \n" +
+                           "4. Print Movies by Genre \n" +
+                           "5. Search for Movie \n" +
+                           "6. Rent Movie \n" +
+                           "7. Return Movie \n" +
+                           "0. Quit");
+    }
+
+    private static String getString(String input) {
+        System.out.print(input);
+        Scanner temp = new Scanner(System.in);
+        return temp.nextLine();
+    }
+
+    private static float getFloat(String input) {
+        while (true) {
+            String temp = getString(input);
+            try {
+                return Float.parseFloat(temp);
+            }
+            catch(Exception e) {
+                System.out.println("Please Enter a Float");
+            }
+        }
+    }
+
+    private static int getInt(String input) {
+        while (true) {
+            String temp = getString(input);
+            try {
+                return Integer.parseInt(temp);
+            }
+            catch(Exception e) {
+                System.out.println("Please Enter an Integer");
+            }
+        }
     }
 
 }
