@@ -8,32 +8,17 @@ public class CustomerInfo {
     WelcomeUser w = new WelcomeUser();
 
     public void createCustomer() throws Exception {
-
-        Scanner in = new Scanner(System.in);
-
-        String first_name = "";
-        String last_name = "";
-        String email_input = "";
-        String address_input = "";
-        int phone = 0;
-
-        System.out.println("Please enter your first name: ");
-        first_name = in.nextLine();
-        System.out.println("Please enter your last name: ");
-        last_name = in.nextLine();
-        System.out.println("Please enter your email: ");
-        email_input = in.nextLine();
-        System.out.println("Please enter your address: ");
-        address_input = in.nextLine();
-        System.out.println("Pleas enter your phone number with no dashes: ");
-        phone = in.nextInt();
-        in.nextLine(); //consumes the \n
+        String first_name = w.getString("Please Enter Your First Name: ");
+        String last_name = w.getString("Please Enter Your Last Name: ");
+        String email_input = w.getString("Please Enter Your Email Address: ");
+        String address_input = w.getString("Please Enter Your Address: ");
+        int phone = w.getInt("Please Enter Your Phone Number: ");
 
 
         //TODO change the SQL statement when we figure out databases
         try {
             //TODO figure out if thats how TXNs actually work
-            PreparedStatement stat = c.getDBConnection().prepareStatement(" START TRANSACTION INSERT INTO student(cusFirstName, cusLastName, cusEmail, cusAddress, cusPhone)"
+            PreparedStatement stat = c.getDBConnection().prepareStatement(" START TRANSACTION INSERT INTO student(FirstName, LastName, Email, Address, Phone)"
                     + " VALUES (?, ?, ?, ?, ?) COMMIT OR ROLLBACK");
 
             stat.setString(1, first_name);
@@ -46,11 +31,11 @@ public class CustomerInfo {
 
             System.out.println("New customer added!");
 
-        }catch(SQLException ex){
+        }
+        catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
-
     }
 }
