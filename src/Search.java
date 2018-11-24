@@ -16,7 +16,7 @@ public class Search {
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",  ");
+                    if (i > 1) System.out.print("  ");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -36,7 +36,7 @@ public class Search {
             columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",  ");
+                    if (i > 1) System.out.print("  ");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -60,7 +60,7 @@ public class Search {
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",  ");
+                    if (i > 1) System.out.print("  ");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -85,7 +85,7 @@ public class Search {
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",  ");
+                    if (i > 1) System.out.print("  ");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -102,7 +102,7 @@ public class Search {
             columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",  ");
+                    if (i > 1) System.out.print("  ");
                     String columnValue = rs.getString(i);
                     System.out.print("You are searching by genre: " + columnValue);
                 }
@@ -120,7 +120,7 @@ public class Search {
             columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print(",  ");
+                    if (i > 1) System.out.print("  ");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -139,28 +139,24 @@ public class Search {
 
     public void searchMovie() throws Exception {
 
-        String movieSearch = w.getString("Title or Keyword: ");
         try{
+            String movieSearch = w.getString("Title or Keyword: ");
+
             //Searching by the users terms
             PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
             stat.setString(1, "%" + movieSearch + "%");
             ResultSet rs = stat.executeQuery();
 
-            if(rs == null){
-                System.out.println("Sorry there are no movies with that title/keyword.");
-            }else{
-                ResultSetMetaData rsmd = rs.getMetaData();
-                int columnsNumber = rsmd.getColumnCount();
-                while (rs.next()) {
-                    for (int i = 1; i <= columnsNumber; i++) {
-                        if (i > 1) System.out.print(",  ");
-                        String columnValue = rs.getString(i);
-                        System.out.print(columnValue);
-                    }
-                    System.out.println("");
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            while (rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print("  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print(columnValue);
                 }
+                System.out.println("");
             }
-
 
         }catch(SQLException ex){
             // handle any errors
