@@ -15,10 +15,9 @@ public class CustomerInfo {
         int phone = w.getInt("Please Enter Your Phone Number: ");
 
 
-        //TODO change the SQL statement when we figure out databases
         try {
             //TODO figure out if thats how TXNs actually work
-            PreparedStatement stat = c.getDBConnection().prepareStatement(" START TRANSACTION INSERT INTO student(FirstName, LastName, Email, Address, Phone)"
+            PreparedStatement stat = c.getDBConnection().prepareStatement(" START TRANSACTION INSERT INTO customer(FirstName, LastName, Email, Address, Phone, idmovie)"
                     + " VALUES (?, ?, ?, ?, ?) COMMIT OR ROLLBACK");
 
             stat.setString(1, first_name);
@@ -26,6 +25,8 @@ public class CustomerInfo {
             stat.setString(3, email_input);
             stat.setString(4, address_input);
             stat.setInt(5, phone);
+            ///TODO Zach look at this bc we have to set it to null and I dont have wifi on the plane to look it up:
+            stat.setNull(6, Integer.parseInt(null));
 
             stat.execute();
 
