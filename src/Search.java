@@ -16,7 +16,7 @@ public class Search {
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
+                    if (i > 1) System.out.print("\t");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -24,6 +24,7 @@ public class Search {
             }
 
             int formatID = w.getInt("Which of these formats would you like the movie you rent to be in? ");
+
 
             //Print all the movies in stock
             stat = c.getDBConnection().prepareStatement("SELECT stockdetails.idmovie, Title\n" +
@@ -36,7 +37,7 @@ public class Search {
             columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
+                    if (i > 1) System.out.print("\t");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -54,13 +55,13 @@ public class Search {
     public void printAll() throws Exception {
         try{
             //Print all the movies whether or not they are in stock
-            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails");
+            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails ORDER BY Title");
             ResultSet rs = stat.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
+                    if (i > 1) System.out.print("\t");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -85,7 +86,7 @@ public class Search {
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
+                    if (i > 1) System.out.print("\t");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }
@@ -102,7 +103,7 @@ public class Search {
             columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
+                    if (i > 1) System.out.print("\t");
                     String columnValue = rs.getString(i);
                     System.out.print("You are searching by genre: " + columnValue);
                 }
@@ -113,14 +114,14 @@ public class Search {
             stat = c.getDBConnection().prepareStatement("SELECT stockdetails.idmovie, Title\n" +
                     "  FROM stockdetails JOIN moviegenre \n" +
                     "    ON stockdetails.idmovie = moviegenre.idmovie\n" +
-                    " WHERE idgenre = ?");
+                    " WHERE idgenre IN (SELECT idgenre FROM moviegenre WHERE idgenre = ?)");
             stat.setInt(1, genreID);
             rs = stat.executeQuery();
             rsmd = rs.getMetaData();
             columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
+                    if (i > 1) System.out.print("\t");
                     String columnValue = rs.getString(i);
                     System.out.print(columnValue);
                 }

@@ -13,7 +13,7 @@ public class Returns {
             //prompt for UserID and password
                 //if correct continue on the returns
                 //if incorrect 3 tries
-            //tell the user what movie they currently have rented (shoot how do we account for what form? frick)
+            //tell the user what movie they currently have rented
             //ask if they wish to return it
                 //if yes update movieforms table and customer table
                 //if no "What the frick are you doing on this page then?"
