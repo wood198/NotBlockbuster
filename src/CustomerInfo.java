@@ -69,7 +69,29 @@ public class CustomerInfo {
 
     public void createNewPassword(int id) throws Exception{
         String checkEmail = w.getString("Type In Your Email For Verification: ");
-        PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ?");
+        String checkPhone = w.getString("Type In Your Phone Number For Verification: ");
+        PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ? AND Phone = ?");
+        pass.setString(1, checkEmail);
+        pass.setString(1, checkPhone);
+
+        int count = 0;
+        ResultSet rs = pass.executeQuery();
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+        while (rs.next()) {
+            count++;
+        }
+
+        if(count > 0){
+            System.out.println("You have been verified as the owner of this account");
+            String changePassword = w.getString("Type In Your New Password: ");
+
+            PreparedStatement newPass = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
+            newPass.setString(1, changePassword);
+            newPass.setInt(2, id);
+
+        }
+
 
     }
 }

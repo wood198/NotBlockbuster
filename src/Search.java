@@ -147,16 +147,29 @@ public class Search {
             PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
             stat.setString(1, "%" + movieSearch + "%");
             ResultSet rs = stat.executeQuery();
-
             ResultSetMetaData rsmd = rs.getMetaData();
+
             int columnsNumber = rsmd.getColumnCount();
+            int count = 0;
             while (rs.next()) {
-                for (int i = 1; i <= columnsNumber; i++) {
-                    if (i > 1) System.out.print("  ");
-                    String columnValue = rs.getString(i);
-                    System.out.print(columnValue);
+                count++;
+            }
+
+            if(count > 0){
+                stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
+                stat.setString(1, "%" + movieSearch + "%");
+                rs = stat.executeQuery();
+                rsmd = rs.getMetaData();
+                while (rs.next()) {
+                    for (int i = 1; i <= columnsNumber; i++) {
+                        if (i > 1) System.out.print("\t");
+                        String columnValue = rs.getString(i);
+                        System.out.print(columnValue);
+                    }
+                    System.out.println("");
                 }
-                System.out.println("");
+            } else {
+                System.out.println("The movie you have searched for does not exist in our stock");
             }
 
         }catch(SQLException ex){
