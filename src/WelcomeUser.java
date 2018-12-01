@@ -8,6 +8,7 @@ public class WelcomeUser {
         Search s = new Search();
         CustomerInfo c = new CustomerInfo();
         Returns r = new Returns();
+        Delete d = new Delete();
 
         boolean loop = true;
 
@@ -37,6 +38,8 @@ public class WelcomeUser {
                 case(5): //Rent Movie
                 case(6): //Return Movie
                     r.returnMovie();
+                case(7): //Return Movie
+                    d.deleteOrUpdate();
                     break;
             }
         }
@@ -47,9 +50,10 @@ public class WelcomeUser {
                            "1. Print All (In-Stock) Movies \n" +
                            "2. Print All Movies \n" +
                            "3. Search by Genre \n" +
-                           "4. Search for Movie \n" +
+                           "4. Search for Movie by Title\n" +
                            "5. Rent Movie \n" +
                            "6. Return Movie \n" +
+                           "7. Delete/Update Customer Account \n" +
                            "0. Quit");
     }
 

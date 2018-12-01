@@ -33,11 +33,24 @@ public class CustomerInfo {
 
             stat.execute();
 
-            //newPassword();
+            PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ?, LastName = ?, Email = ?, Address = ?, Phone = ?");
+            ps.setString(1, first_name);
+            ps.setString(2, last_name);
+            ps.setString(3, email_input);
+            ps.setString(4, address_input);
+            ps.setInt(5, phone);
+
+
+            //TODO: figure out how to grab the persons UserID from the above SQL statement to do the password
+            String new_password = w.getString("Please Create A Password: ");
+            ps = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
+            ps.setString(1,new_password);
+            ps.setInt(2,userID);
+
+
 
             System.out.println("You now have an account with NotBlockbuster!");
-            PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM passwords WHERE Password = ?");
-            //ps.setString(1, new_password);
+            ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM passwords WHERE Password = ?");
             ResultSet rs = stat.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
@@ -57,19 +70,11 @@ public class CustomerInfo {
         }
     }
 
-    public void password(String first, String last, String email, String address, int phone) throws Exception{
-        String new_password = w.getString("Please Create A Password: ");
-        PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ? AND LastName = ? AND Email = ? AND Address = ? AND Phone = ?");
-        pass.setString(1, first);
-        pass.setString(2, last);
-        pass.setString(3, email);
-        pass.setString(4, address);
-        pass.setInt(5, phone);
-    }
+    public void createNewPassword() throws Exception{
 
-    public void createNewPassword(int id) throws Exception{
-        String checkEmail = w.getString("Type In Your Email For Verification: ");
-        String checkPhone = w.getString("Type In Your Phone Number For Verification: ");
+        int id = w.getInt("Enter Your UserID: ");
+        String checkEmail = w.getString("Enter Your Email For Verification: ");
+        String checkPhone = w.getString("Enter Your Phone Number For Verification: ");
         PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ? AND Phone = ?");
         pass.setString(1, checkEmail);
         pass.setString(1, checkPhone);

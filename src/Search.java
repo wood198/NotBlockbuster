@@ -141,35 +141,48 @@ public class Search {
     public void searchMovie() throws Exception {
 
         try{
-            String movieSearch = w.getString("Title or Keyword: ");
 
-            //Searching by the users terms
-            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
-            stat.setString(1, "%" + movieSearch + "%");
-            ResultSet rs = stat.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
+            boolean search = true;
+            while(search == true){
+                String movieSearch = w.getString("Title or Keyword: ");
 
-            int columnsNumber = rsmd.getColumnCount();
-            int count = 0;
-            while (rs.next()) {
-                count++;
-            }
-
-            if(count > 0){
-                stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
+                //Searching by the users terms
+                PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
                 stat.setString(1, "%" + movieSearch + "%");
-                rs = stat.executeQuery();
-                rsmd = rs.getMetaData();
+                ResultSet rs = stat.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+
+                int columnsNumber = rsmd.getColumnCount();
+                int count = 0;
                 while (rs.next()) {
-                    for (int i = 1; i <= columnsNumber; i++) {
-                        if (i > 1) System.out.print("\t");
-                        String columnValue = rs.getString(i);
-                        System.out.print(columnValue);
-                    }
-                    System.out.println("");
+                    count++;
                 }
-            } else {
-                System.out.println("The movie you have searched for does not exist in our stock");
+
+                if(count > 0){
+                    stat = c.getDBConnection().prepareStatement("SELECT idmovie, Title FROM stockdetails WHERE Title LIKE ?");
+                    stat.setString(1, "%" + movieSearch + "%");
+                    rs = stat.executeQuery();
+                    rsmd = rs.getMetaData();
+                    while (rs.next()) {
+                        for (int i = 1; i <= columnsNumber; i++) {
+                            if (i > 1) System.out.print("\t");
+                            String columnValue = rs.getString(i);
+                            System.out.print(columnValue);
+                        }
+                        System.out.println("");
+                    }
+
+                    search = false;
+
+                } else {
+                    System.out.println("The movie you have searched for does not exist in our stock");
+                    String carryOn = w.getString("Would you like to search for a different movie? (y/n) ");
+                    if(carryOn.equals("y")) {
+                        search = true;
+                    }else {
+                        search = false;
+                    }
+                }
             }
 
         }catch(SQLException ex){
