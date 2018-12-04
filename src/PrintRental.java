@@ -41,7 +41,7 @@ public class PrintRental {
                             checkout(userID);
                             correctPassword = true;
 
-                        } else {
+                        } else if(!pass.equals(retrievedPassword)){
                             System.out.println("The password you have entered is incorrect");
                             tries--;
                             if(tries == 0){
