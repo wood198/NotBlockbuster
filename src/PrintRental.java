@@ -22,7 +22,8 @@ public class PrintRental {
 
                     //Gives the User 3 tries to enter the correct password before kicking them back to the main menu
                     int tries = 3;
-                    while (tries > 0) {
+                    boolean correctPassword = false;
+                    while (correctPassword == false) {
                         int userID = w.getInt("Enter Your UserID: ");
                         String pass = w.getString("Enter Your Password: ");
 
@@ -38,10 +39,14 @@ public class PrintRental {
                         //if they enter the correct password they get to rent a movie
                         if (pass.equals(retrievedPassword)) {
                             checkout(userID);
-                            break;
+                            correctPassword = true;
+
                         } else {
                             System.out.println("The password you have entered is incorrect");
                             tries--;
+                            if(tries == 0){
+                                correctPassword = true;
+                            }
                         }
                     }
 
