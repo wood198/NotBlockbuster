@@ -85,10 +85,8 @@ public class CustomerInfo {
         try{
             int id = w.getInt("Enter Your UserID: ");
             String checkEmail = w.getString("Enter Your Email For Verification: ");
-            String checkPhone = w.getString("Enter Your Phone Number For Verification: ");
-            PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ? AND Phone = ?");
+            PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ?");
             pass.setString(1, checkEmail);
-            pass.setString(1, checkPhone);
 
             int count = 0;
             ResultSet rs = pass.executeQuery();
