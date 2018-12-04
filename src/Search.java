@@ -7,8 +7,11 @@ public class Search {
     DBConnect c = new DBConnect();
     WelcomeUser w = new WelcomeUser();
 
+    //print all the movies that are in stock
     public void printInStock() throws Exception {
         try{
+
+            //print the different formats so they know the format ids
             System.out.println("Here are the formats movies come in: ");
             PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT * FROM formats");
             ResultSet rs = stat.executeQuery();
@@ -23,6 +26,8 @@ public class Search {
                 System.out.println("");
             }
             w.promptEnterKey();
+
+            //ask what format they want
             int formatID = w.getInt("Which of these formats would you like the movie you rent to be in? ");
 
             //Print all the movies in stock

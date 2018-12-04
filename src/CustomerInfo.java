@@ -7,6 +7,8 @@ public class CustomerInfo {
     WelcomeUser w = new WelcomeUser();
 
     public void createCustomer() throws Exception {
+
+        //the user inputs all their info
         String first_name = w.getString("Please Enter Your First Name: ");
         String last_name = w.getString("Please Enter Your Last Name: ");
         String email_input = w.getString("Please Enter Your Email Address: ");
@@ -19,6 +21,8 @@ public class CustomerInfo {
             //TODO figure out if thats how TXNs actually work
             //TODO: HOW DO YOU INSERT NULL VALUES INTO THIS STUPID TABLE??????????????????
             //TODO: AAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+
+            //the users info is added to the customer table
             PreparedStatement stat = c.getDBConnection().prepareStatement("INSERT INTO customer (FirstName, LastName, Email, Address, Phone)"
             + " VALUES (?, ?, ?, ?, ?)");
             stat.setString(1, first_name);
@@ -28,6 +32,7 @@ public class CustomerInfo {
             stat.setString(5, phone);
             stat.execute();
 
+            //get their id from the table to use later
             PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ?, LastName = ?, Email = ?, Address = ?, Phone = ?");
             ps.setString(1, first_name);
             ps.setString(2, last_name);
@@ -39,13 +44,14 @@ public class CustomerInfo {
 
 
             //TODO: figure out how to grab the persons UserID from the above SQL statement to do the password
+            //have the user create a password
             String new_password = w.getString("Please Create A Password: ");
             ps = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
             ps.setString(1,new_password);
             ps.setInt(2,userID);
 
 
-
+            //tell the user what their ID Number is
             System.out.println("You now have an account with NotBlockbuster!");
             ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM passwords WHERE Password = ?");
             rs = stat.executeQuery();
@@ -70,29 +76,39 @@ public class CustomerInfo {
 
     public void createNewPassword() throws Exception{
 
-        int id = w.getInt("Enter Your UserID: ");
-        String checkEmail = w.getString("Enter Your Email For Verification: ");
-        String checkPhone = w.getString("Enter Your Phone Number For Verification: ");
-        PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ? AND Phone = ?");
-        pass.setString(1, checkEmail);
-        pass.setString(1, checkPhone);
+        //have the user verify their information in order to create a new password
+        try{
+            int id = w.getInt("Enter Your UserID: ");
+            String checkEmail = w.getString("Enter Your Email For Verification: ");
+            String checkPhone = w.getString("Enter Your Phone Number For Verification: ");
+            PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ? AND Phone = ?");
+            pass.setString(1, checkEmail);
+            pass.setString(1, checkPhone);
 
-        int count = 0;
-        ResultSet rs = pass.executeQuery();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
-        while (rs.next()) {
-            count++;
+            int count = 0;
+            ResultSet rs = pass.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            while (rs.next()) {
+                count++;
+            }
+
+            //have them create a new password if they are verified and update the password table
+            if(count > 0){
+                System.out.println("You have been verified as the owner of this account");
+                String changePassword = w.getString("Type In Your New Password: ");
+
+                PreparedStatement newPass = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
+                newPass.setString(1, changePassword);
+                newPass.setInt(2, id);
+            }
+            w.promptEnterKey();
+
+        }catch(SQLException ex){
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
         }
-
-        if(count > 0){
-            System.out.println("You have been verified as the owner of this account");
-            String changePassword = w.getString("Type In Your New Password: ");
-
-            PreparedStatement newPass = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
-            newPass.setString(1, changePassword);
-            newPass.setInt(2, id);
-        }
-        w.promptEnterKey();
     }
 }
