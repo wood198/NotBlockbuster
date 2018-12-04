@@ -1,7 +1,4 @@
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
 public class CustomerInfo {
@@ -14,23 +11,22 @@ public class CustomerInfo {
         String last_name = w.getString("Please Enter Your Last Name: ");
         String email_input = w.getString("Please Enter Your Email Address: ");
         String address_input = w.getString("Please Enter Your Address: ");
-        int phone = w.getInt("Please Enter Your Phone Number: ");
+        String phone = w.getString("Please Enter Your Phone Number (Do not include dashes or parenthesis): ");
 
         //TODO: Have to make it so that they can only enter 10 digits. (No spaces or dashes)
 
         try {
             //TODO figure out if thats how TXNs actually work
-            PreparedStatement stat = c.getDBConnection().prepareStatement(" START TRANSACTION INSERT INTO customer(FirstName, LastName, Email, Address, Phone, idmovie, idformat)"
-                    + " VALUES (?, ?, ?, ?, ?) COMMIT OR ROLLBACK");
-
+            //TODO: HOW DO YOU INSERT NULL VALUES INTO THIS STUPID TABLE??????????????????
+            PreparedStatement stat = c.getDBConnection().prepareStatement("INSERT INTO customer (FirstName, LastName, Email, Address, Phone, idmovie, idformat)"
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?)");
             stat.setString(1, first_name);
             stat.setString(2, last_name);
             stat.setString(3, email_input);
             stat.setString(4, address_input);
-            stat.setInt(5, phone);
-            stat.setInt(6, 0);      //Hi Zach! I used 0 instead of Null since there are no 0s in our data
-            stat.setInt(7, 0);      //we can use 0 to represent that they havent checked any movies out
-
+            stat.setString(5, phone);
+            stat.setNull(6, Types.NULL);
+            stat.setNull(7, Types.NULL);
             stat.execute();
 
             PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ?, LastName = ?, Email = ?, Address = ?, Phone = ?");
@@ -38,7 +34,9 @@ public class CustomerInfo {
             ps.setString(2, last_name);
             ps.setString(3, email_input);
             ps.setString(4, address_input);
-            ps.setInt(5, phone);
+            ps.setString(5, phone);
+            ResultSet rs = ps.executeQuery();
+            int userID = rs.getInt("idcustomer");
 
 
             //TODO: figure out how to grab the persons UserID from the above SQL statement to do the password
@@ -51,7 +49,7 @@ public class CustomerInfo {
 
             System.out.println("You now have an account with NotBlockbuster!");
             ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM passwords WHERE Password = ?");
-            ResultSet rs = stat.executeQuery();
+            rs = stat.executeQuery();
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {

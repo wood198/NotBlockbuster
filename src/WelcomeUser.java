@@ -9,6 +9,7 @@ public class WelcomeUser {
         CustomerInfo c = new CustomerInfo();
         Returns r = new Returns();
         Delete d = new Delete();
+        PrintRental p = new PrintRental();
 
         boolean loop = true;
 
@@ -36,6 +37,7 @@ public class WelcomeUser {
                     s.searchMovie();
                     break;
                 case(5): //Rent Movie
+                    p.login();
                 case(6): //Return Movie
                     r.returnMovie();
                 case(7): //Return Movie

@@ -11,12 +11,10 @@ public class PrintRental {
     public void login() throws Exception {
 
         Scanner in = new Scanner(System.in);
-
-        boolean renting = true;
-        while (renting == true) {
-            String rentedBefore = w.getString("Have you Rented From Us Before? (y/n) ");
+        String rentedBefore = w.getString("Have you rented with us before? (y/n) ");
             if (rentedBefore.equals("y")) {
 
+                //Gives the User 3 tries to enter the correct password before kicking them back to the main menu
                 int tries = 3;
                 while(tries > 0) {
                     int userID = w.getInt("Enter Your UserID: ");
@@ -24,14 +22,18 @@ public class PrintRental {
 
                     PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT Password FROM passwords WHERE idcustomer = ?");
                     stat.setInt(1, userID);
+                    ResultSet rs = stat.executeQuery();
+                    String retrievedPassword = null;
+                    while (rs.next()) {
+                        retrievedPassword = rs.getString("Password");
+                    }
 
                     //TODO: figure out how to actually check to see if password matches the one in the passwords table
-                    if(stat.equals(pass)){
+                    if (pass.equals(retrievedPassword)) {
                         i.createCustomer();
                         checkout(userID);
-                        renting = false;
                         break;
-                    }else{
+                    } else {
                         System.out.println("The password you have entered is incorrect");
                         tries--;
                     }
@@ -49,19 +51,14 @@ public class PrintRental {
                 i.createCustomer();
                 int userID = w.getInt("Enter Your UserID? ");
                 checkout(userID);
-                renting = false;
 
             } else {
 
                 System.out.println("That was not an option. Try again");
-                renting = true;
 
             }
         }
 
-        //if no then create account w/password then continue to checkout
-
-    }
 
     public void checkout(int userID) throws Exception {
         //checkout:
