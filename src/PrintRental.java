@@ -7,16 +7,19 @@ public class PrintRental {
     DBConnect c = new DBConnect();
     WelcomeUser w = new WelcomeUser();
     CustomerInfo i = new CustomerInfo();
+    Returns r = new Returns();
 
     public void login() throws Exception {
 
         Scanner in = new Scanner(System.in);
-        String rentedBefore = w.getString("Have you rented with us before? (y/n) ");
+        boolean renting = true;
+        while (renting = true) {
+            String rentedBefore = w.getString("Have you rented with us before? (y/n) ");
             if (rentedBefore.equals("y")) {
 
                 //Gives the User 3 tries to enter the correct password before kicking them back to the main menu
                 int tries = 3;
-                while(tries > 0) {
+                while (tries > 0) {
                     int userID = w.getInt("Enter Your UserID: ");
                     String pass = w.getString("Enter Your Password: ");
 
@@ -28,9 +31,7 @@ public class PrintRental {
                         retrievedPassword = rs.getString("Password");
                     }
 
-                    //TODO: figure out how to actually check to see if password matches the one in the passwords table
                     if (pass.equals(retrievedPassword)) {
-                        i.createCustomer();
                         checkout(userID);
                         break;
                     } else {
@@ -38,10 +39,10 @@ public class PrintRental {
                         tries--;
                     }
                 }
-                if(tries == 0){
+                if (tries == 0) {
                     String changePassOption = w.getString("You have ran out of tries. Would you like to change your password? (y/n) ");
 
-                    if(changePassOption.equals("y")){
+                    if (changePassOption.equals("y")) {
                         i.createNewPassword();
                     }
                 }
@@ -51,6 +52,7 @@ public class PrintRental {
                 i.createCustomer();
                 int userID = w.getInt("Enter Your UserID? ");
                 checkout(userID);
+                renting = false;
 
             } else {
 
@@ -58,13 +60,13 @@ public class PrintRental {
 
             }
         }
-
+    }
 
     public void checkout(int userID) throws Exception {
-        //checkout:
-        //check to see if customer has a movie already rented
-        //if yes say they have to return the movie in order to get a new one (give the option)
-        //if wanting to return send them to Returns.java
+
+        r.returnMovieFromCheckout(userID);
+
+
         //if no then continue with checkout
         //ask for the id of the movie and the form of the movie they want to check out
         //check if it is in stock

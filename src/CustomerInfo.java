@@ -18,15 +18,14 @@ public class CustomerInfo {
         try {
             //TODO figure out if thats how TXNs actually work
             //TODO: HOW DO YOU INSERT NULL VALUES INTO THIS STUPID TABLE??????????????????
-            PreparedStatement stat = c.getDBConnection().prepareStatement("INSERT INTO customer (FirstName, LastName, Email, Address, Phone, idmovie, idformat)"
-                    + " VALUES (?, ?, ?, ?, ?, ?, ?)");
+            //TODO: AAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+            PreparedStatement stat = c.getDBConnection().prepareStatement("INSERT INTO customer (FirstName, LastName, Email, Address, Phone)"
+            + " VALUES (?, ?, ?, ?, ?)");
             stat.setString(1, first_name);
             stat.setString(2, last_name);
             stat.setString(3, email_input);
             stat.setString(4, address_input);
             stat.setString(5, phone);
-            stat.setNull(6, Types.NULL);
-            stat.setNull(7, Types.NULL);
             stat.execute();
 
             PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ?, LastName = ?, Email = ?, Address = ?, Phone = ?");
