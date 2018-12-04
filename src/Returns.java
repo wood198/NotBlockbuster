@@ -7,7 +7,7 @@ public class Returns {
     WelcomeUser w = new WelcomeUser();
     CustomerInfo i = new CustomerInfo();
 
-    public boolean returnMovieFromCheckout(int userID) throws Exception {
+    public boolean returnMovieFromOtherClasses(int userID) throws Exception {
 
         Scanner in = new Scanner(System.in);
         boolean returned = false;
@@ -27,8 +27,8 @@ public class Returns {
 
                 //TODO: ENTER ALL THE CHECKING FOR CURRENTLY RENTED MOVIES SQL STUFF HERE
                 //TODO: CHECK FOR MOVIE,
-                //TODO: ASK IF THEY WANT TO RETURN (REMIND THEM THAT THEY HAVE TO IN ORDER TO GO THROUGH WITH THEIR NEW RENTAL),
-                //TODO: IF YES, RETURN THE MOVIE (SETTING CUSTOMER BACK TO NULLS IN THE RIGHT PLACES AND RETURNING THE MOVIE TO THE CORRECT INSTOCK PLACES), return true bc the other method relies on it
+                //TODO: ASK IF THEY WANT TO RETURN (REMIND THEM THAT THEY HAVE TO IN ORDER TO GO THROUGH WITH THEIR NEW RENTAL OR DELETION OF THEIR ACCOUNT),
+                //TODO: IF YES, RETURN THE MOVIE (SETTING CUSTOMER BACK TO NULLS IN THE RIGHT PLACES AND RETURNING THE MOVIE TO THE CORRECT INSTOCK PLACES), return true bc the other methods rely on it
                 //TODO: IF NO, return false for the boolean returned
                 break;
 

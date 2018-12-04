@@ -8,20 +8,25 @@ public class CustomerInfo {
 
     public void createCustomer() throws Exception {
 
+        System.out.println("Create an Account: ");
+
         //the user inputs all their info
         String first_name = w.getString("Please Enter Your First Name: ");
         String last_name = w.getString("Please Enter Your Last Name: ");
         String email_input = w.getString("Please Enter Your Email Address: ");
         String address_input = w.getString("Please Enter Your Address: ");
-        String phone = w.getString("Please Enter Your Phone Number (Do not include dashes or parenthesis): ");
+        String phone = "";
+        boolean digits = false;
+        while(!digits) {
+            phone = w.getString("Please Enter Your Phone Number (Do not include dashes or parenthesis): ");
+            digits = true;
 
-        //TODO: Have to make it so that they can only enter 10 digits. (No spaces or dashes)
+            if (phone.length() < 10) {
+                System.out.println("Phone Number Must Be 10 Digits Long");
+            }
+        }
 
         try {
-            //TODO figure out if thats how TXNs actually work
-            //TODO: HOW DO YOU INSERT NULL VALUES INTO THIS STUPID TABLE??????????????????
-            //TODO: AAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-
             //the users info is added to the customer table
             //there is a check constraint on phone to make sure it is exactly 10 digits
             PreparedStatement stat = c.getDBConnection().prepareStatement("INSERT INTO customer (FirstName, LastName, Email, Address, Phone)"
@@ -44,7 +49,6 @@ public class CustomerInfo {
             int userID = rs.getInt("idcustomer");
 
 
-            //TODO: figure out how to grab the persons UserID from the above SQL statement to do the password
             //have the user create a password
             String new_password = w.getString("Please Create A Password: ");
             ps = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");

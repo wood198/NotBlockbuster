@@ -6,34 +6,50 @@ public class Delete{
 
     DBConnect c = new DBConnect();
     WelcomeUser w = new WelcomeUser();
+    Returns r = new Returns();
 
     public void deleteOrUpdate() throws Exception {
 
         Scanner in = new Scanner(System.in);
         try{
+
+            //checks for a userID and Password
             boolean correct = true;
             while(correct == true){
                 int userID = w.getInt("What is your UserID? ");
-                String pass = w.getString("What is your Password? ");
+                String pass = w.getString("Enter Your Password: ");
 
+                //checks the users input against the password in the table for that ID
                 PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT Password FROM passwords WHERE idcustomer = ?");
-                stat.setInt(1,userID);
+                stat.setInt(1, userID);
+                ResultSet rs = stat.executeQuery();
+                String retrievedPassword = null;
+                while (rs.next()) {
+                    retrievedPassword = rs.getString("Password");
+                }
 
-                //TODO: figure out how to actually check to see if password matches the one in the passwords table
-
-                if(stat.equals(pass)){
+                //if they enter a correct password for the entered ID they get to update the account or delete it
+                if (pass.equals(retrievedPassword)) {
                     int choose = w.getInt("Select an Option: \n" +
                             "1. Delete Account \n" +
                             "2. Update Profile");
 
+                    //check to see if they currently have a movie rented. If no, delete customer if yes return the movie then delete
                     if (choose == 1) {
-                        //TODO: this needs to be checked once we have creating a customer operational
-                        stat = c.getDBConnection().prepareStatement("DELETE FROM customer AND passwords WHERE userID = ?");
-                        stat.setInt(1, userID);
 
-                        stat.execute();
+                        r.returnMovieFromOtherClasses(userID);
 
-                        System.out.println("Your customer account has been deleted from our system");
+                        if(r.returnMovieFromOtherClasses(userID) == true) {
+                            //TODO: this needs to be checked once we have creating a customer operational
+                            PreparedStatement del = c.getDBConnection().prepareStatement("DELETE FROM customer AND passwords WHERE userID = ?");
+                            del.setInt(1, userID);
+                            del.execute();
+                            System.out.println("Your customer account has been deleted from our system");
+
+                        } else {
+                            System.out.println("You must return your currently rented movie in order to delete your account");
+                        }
+
                     }
                     else if (choose == 2) {
 
@@ -46,9 +62,9 @@ public class Delete{
                             if (update == 1) {
 
                                 String newEmail = w.getString("Enter Your Updated Email: ");
-                                stat = c.getDBConnection().prepareStatement("UPDATE customer SET Email = ? WHERE idcustomer = ?");
-                                stat.setString(1, newEmail);
-                                stat.setInt(2, userID);
+                                PreparedStatement upEm = c.getDBConnection().prepareStatement("UPDATE customer SET Email = ? WHERE idcustomer = ?");
+                                upEm.setString(1, newEmail);
+                                upEm.setInt(2, userID);
                                 System.out.println("Email has been updated");
 
                                 String continueUpdates = w.getString("Would you like to update something else? (y/n) ");
@@ -62,9 +78,9 @@ public class Delete{
                             else if (update == 2) {
 
                                 String newAddress = w.getString("Enter Your Updated Address: ");
-                                stat = c.getDBConnection().prepareStatement("UPDATE customer SET Address = ? WHERE idcustomer = ?");
-                                stat.setString(1, newAddress);
-                                stat.setInt(2, userID);
+                                PreparedStatement upAd = c.getDBConnection().prepareStatement("UPDATE customer SET Address = ? WHERE idcustomer = ?");
+                                upAd.setString(1, newAddress);
+                                upAd.setInt(2, userID);
                                 System.out.println("Address has been updated");
 
                                 String continueUpdates = w.getString("Would you like to update something else? (y/n) ");
@@ -77,11 +93,20 @@ public class Delete{
                             }
                             else if (update == 3) {
 
-                                //TODO: Make sure they can only enter 10 digits
-                                String newPhone = w.getString("Enter Your Updated Phone Number: ");
-                                stat = c.getDBConnection().prepareStatement("UPDATE customer SET Phone = ? WHERE idcustomer = ?");
-                                stat.setString(1, newPhone);
-                                stat.setInt(2, userID);
+                                String newPhone = "";
+                                boolean digits = false;
+                                while(!digits) {
+                                    newPhone = w.getString("Please Enter Your Updated Phone Number (Do not include dashes or parenthesis): ");
+                                    digits = true;
+
+                                    if (newPhone.length() < 10) {
+                                        System.out.println("Phone Number Must Be 10 Digits Long");
+                                    }
+                                }
+
+                                PreparedStatement upPh = c.getDBConnection().prepareStatement("UPDATE customer SET Phone = ? WHERE idcustomer = ?");
+                                upPh.setString(1, newPhone);
+                                upPh.setInt(2, userID);
                                 System.out.println("Phone Number has been updated");
 
                                 String continueUpdates = w.getString("Would you like to update something else? (y/n) ");
