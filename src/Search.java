@@ -22,9 +22,8 @@ public class Search {
                 }
                 System.out.println("");
             }
-
+            w.promptEnterKey();
             int formatID = w.getInt("Which of these formats would you like the movie you rent to be in? ");
-
 
             //Print all the movies in stock
             stat = c.getDBConnection().prepareStatement("SELECT stockdetails.idmovie, Title\n" +
@@ -43,8 +42,9 @@ public class Search {
                 }
                 System.out.println("");
             }
-
-        } catch(SQLException ex){
+            w.promptEnterKey();
+        }
+        catch(SQLException ex){
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
@@ -67,8 +67,9 @@ public class Search {
                 }
                 System.out.println("");
             }
-
-        } catch(SQLException ex){
+            w.promptEnterKey();
+        }
+        catch(SQLException ex){
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
@@ -127,19 +128,16 @@ public class Search {
                 }
                 System.out.println("");
             }
-
-
-
+            w.promptEnterKey();
         }catch(SQLException ex){
-        // handle any errors
-        System.out.println("SQLException: " + ex.getMessage());
-        System.out.println("SQLState: " + ex.getSQLState());
-        System.out.println("VendorError: " + ex.getErrorCode());
+            // handle any errors
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
         }
     }
 
     public void searchMovie() throws Exception {
-
         try{
 
             boolean search = true;
@@ -171,10 +169,9 @@ public class Search {
                         }
                         System.out.println("");
                     }
-
                     search = false;
-
-                } else {
+                }
+                else {
                     System.out.println("The movie you have searched for does not exist in our stock");
                     String carryOn = w.getString("Would you like to search for a different movie? (y/n) ");
                     if(carryOn.equals("y")) {
@@ -184,8 +181,9 @@ public class Search {
                     }
                 }
             }
-
-        }catch(SQLException ex){
+            w.promptEnterKey();
+        }
+        catch(SQLException ex){
             // handle any errors
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());

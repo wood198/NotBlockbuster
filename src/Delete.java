@@ -22,7 +22,6 @@ public class Delete{
             //TODO: figure out how to actually check to see if password matches the one in the passwords table
 
             if(stat.equals(pass)){
-
                 int choose = w.getInt("Select an Option: \n" +
                         "1. Delete Account \n" +
                         "2. Update Profile");
@@ -35,7 +34,8 @@ public class Delete{
                     stat.execute();
 
                     System.out.println("Your customer account has been deleted from our system");
-                } else if (choose == 2) {
+                }
+                else if (choose == 2) {
 
                     boolean answer = true;
                     while (answer = true) {
@@ -57,8 +57,9 @@ public class Delete{
                             }else {
                                 answer = false;
                             }
-
-                        } else if (update == 2) {
+                            w.promptEnterKey();
+                        }
+                        else if (update == 2) {
 
                             String newAddress = w.getString("Enter Your Updated Address: ");
                             stat = c.getDBConnection().prepareStatement("UPDATE customer SET Address = ? WHERE idcustomer = ?");
@@ -72,8 +73,9 @@ public class Delete{
                             }else {
                                 answer = false;
                             }
-
-                        } else if (update == 3) {
+                            w.promptEnterKey();
+                        }
+                        else if (update == 3) {
 
                             //TODO: Make sure they can only enter 10 digits
                             String newPhone = w.getString("Enter Your Updated Phone Number: ");
@@ -88,24 +90,18 @@ public class Delete{
                             }else {
                                 answer = false;
                             }
-
-                        } else {
-
+                            w.promptEnterKey();
+                        }
+                        else {
                             System.out.println("That was not an option.");
-
                         }
                     }
-
                 }
-
                 correct = false;
-            }else{
+            }
+            else{
                 System.out.println("The password you have entered is incorrect");
             }
-
         }
-
     }
-
-
 }

@@ -60,6 +60,7 @@ public class CustomerInfo {
                 }
                 System.out.println("");
             }
+            w.promptEnterKey();
         }
         catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
@@ -92,9 +93,7 @@ public class CustomerInfo {
             PreparedStatement newPass = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
             newPass.setString(1, changePassword);
             newPass.setInt(2, id);
-
         }
-
-
+        w.promptEnterKey();
     }
 }
