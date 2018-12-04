@@ -23,6 +23,7 @@ public class CustomerInfo {
             //TODO: AAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
             //the users info is added to the customer table
+            //there is a check constraint on phone to make sure it is exactly 10 digits
             PreparedStatement stat = c.getDBConnection().prepareStatement("INSERT INTO customer (FirstName, LastName, Email, Address, Phone)"
             + " VALUES (?, ?, ?, ?, ?)");
             stat.setString(1, first_name);

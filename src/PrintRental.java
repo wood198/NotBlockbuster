@@ -110,10 +110,13 @@ public class PrintRental {
                     System.out.println("Your movie is in stock in that format!");
 
                     //update their customer table with the new rented updates to her idmovie and her idformat
-                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?");
+                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
+                            "UPDATE movieforms SET InStock = InStock - 1 and CheckedOut = CheckedOut + 1 WHERE idmovie = ? and idformat = ? COMMIT or ROLLBACK");
                     updateCustomersRental.setInt(1, movieID);
                     updateCustomersRental.setInt(2, formatID);
                     updateCustomersRental.setInt(3, userID);
+                    updateCustomersRental.setInt(3, movieID);
+                    updateCustomersRental.setInt(3, formatID);
 
                     //Print out their order for them
                     System.out.println("Here is your order: ");
