@@ -58,8 +58,8 @@ public class Returns {
                     String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
                     if(doReturn == "y") {
-                        PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
-                                "UPDATE movieforms SET InStock = InStock + 1 and CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
+                        PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
+                                "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
                         updateCustomersRental.setInt(1, movieID);
                         updateCustomersRental.setInt(2, formatID);
                         updateCustomersRental.setInt(3, userID);
@@ -140,8 +140,8 @@ public class Returns {
                 String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
                 if(doReturn == "y") {
-                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
-                            "UPDATE movieforms SET InStock = InStock + 1 and CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
+                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
+                            "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
                     updateCustomersRental.setInt(1, movieID);
                     updateCustomersRental.setInt(2, formatID);
                     updateCustomersRental.setInt(3, userID);
@@ -155,9 +155,6 @@ public class Returns {
                     break;
                 }
 
-                //TODO: if yes update movieforms table and customer table
-                //TODO: if no "What the frick are you doing on this page then?"
-                //TODO: Once things are sorted out: "Have a nice day!"
                 break;
             } else {
                 System.out.println("The password you have entered is incorrect");
