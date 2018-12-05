@@ -34,11 +34,21 @@ public class Returns {
                     movieID = rs.getInt("idmovie");
                     formatID = rs.getInt("idformat");
                 }
+
+                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customers WHERE idmovie IS NOT NULL AND idcustomer = ?");
+                stat.setInt(1, userID);
+                rs = stat.executeQuery();
+
+                int count = 0;
+                while (rs.next()) {
+                    count++;
+                }
+
                 //TODO: CHECK FOR MOVIE,
-                if(movieID == -1) {
+                if(count == 0) {
                     System.out.println("You do not have a movie rented");
                 }
-                else {
+                else if(count > 0) {
                     System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
                     String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
