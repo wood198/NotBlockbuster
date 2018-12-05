@@ -36,20 +36,55 @@ public class Returns {
             System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
             String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
-            if(doReturn == "y") {
-                PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
-                        "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
-                updateCustomersRental.setInt(1, movieID);
-                updateCustomersRental.setInt(2, formatID);
-                updateCustomersRental.setInt(3, userID);
-                updateCustomersRental.setInt(4, movieID);
-                updateCustomersRental.setInt(5, formatID);
-                returned = true;
-            }
-            else {
-                returned = false;
-            }
+            boolean running = true;
+            while(running == true) {
 
+                if (doReturn.equals("y")) {
+                    PreparedStatement preparedStatementUpdateCus = null;
+                    PreparedStatement preparedStatementUpdateForms = null;
+
+                    String updateCusTableSQL = "UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?";
+
+                    String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock - 1, CheckedOut = CheckedOut + 1 WHERE idmovie = ? AND idformat = ?";
+
+                    try {
+
+                        c.getDBConnection().setAutoCommit(false);
+
+                        preparedStatementUpdateCus = c.getDBConnection().prepareStatement(updateCusTableSQL);
+                        preparedStatementUpdateCus.setNull(1, java.sql.Types.INTEGER);
+                        preparedStatementUpdateCus.setNull(2, java.sql.Types.INTEGER);
+                        preparedStatementUpdateCus.setInt(3, userID);
+                        preparedStatementUpdateCus.executeUpdate();
+
+                        preparedStatementUpdateForms = c.getDBConnection().prepareStatement(updateFormTableSQL);
+                        preparedStatementUpdateForms.setInt(1, movieID);
+                        preparedStatementUpdateForms.setInt(2, formatID);
+                        preparedStatementUpdateForms.executeUpdate();
+
+                        c.getDBConnection().commit();
+
+                        System.out.println("Done!");
+
+                    } catch (SQLException e) {
+
+                        c.getDBConnection().setAutoCommit(false);
+                        System.out.println(e.getMessage());
+                        c.getDBConnection().rollback();
+                    }
+
+                    running = false;
+                    break;
+
+                } else if (doReturn.equals("n")) {
+                    System.out.println("Why are you here then? Do you need to change your major to Art History?");
+                    w.promptEnterKey();
+                    running = false;
+                    break;
+                } else {
+                    System.out.println("That was not an option select again");
+                }
+            }
         }
         else {
             System.out.println("You do not have a movie rented");
@@ -87,11 +122,14 @@ public class Returns {
                     formatID = rs.getInt("idformat");
                 }
 
-                PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT stockdetails.Title, formats.FormatType" +
+                PreparedStatement returns = c.getDBConnection().prepareStatement("SELECT stockdetails.Title, formats.FormatType" +
                         " FROM movieforms\n" +
                         "JOIN stockdetails ON movieforms.idmovie = stockdetails.idmovie\n" +
-                        "JOIN formats ON movieforms.idformat = formats.idformat");
-                rs = checkout.executeQuery();
+                        "JOIN formats ON movieforms.idformat = formats.idformat\n" +
+                        "JOIN customer ON movieforms.idmovie = customer.idmovie and movieforms.idformat = customer.idformat\n" +
+                        "WHERE idcustomer = ?");
+                returns.setInt(1, userID);
+                rs = returns.executeQuery();
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int columnsNumber = rsmd.getColumnCount();
                 while (rs.next()) {
@@ -104,24 +142,56 @@ public class Returns {
                 }
 
                 //TODO: ask if they wish to return it
-                String doReturn = w.getString("Would you like to return your Movie? (y/n)");
+                boolean running = true;
+                    while(running == true) {
+                        String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
-                if(doReturn == "y") {
-                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
-                            "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
-                    updateCustomersRental.setInt(1, movieID);
-                    updateCustomersRental.setInt(2, formatID);
-                    updateCustomersRental.setInt(3, userID);
-                    updateCustomersRental.setInt(4, movieID);
-                    updateCustomersRental.setInt(5, formatID);
+                        if (doReturn.equals("y")) {
+                            PreparedStatement preparedStatementUpdateCus = null;
+                            PreparedStatement preparedStatementUpdateForms = null;
 
-                    System.out.println("");
+                            String updateCusTableSQL = "UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?";
+
+                            String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock - 1, CheckedOut = CheckedOut + 1 WHERE idmovie = ? AND idformat = ?";
+
+                            try {
+
+                                c.getDBConnection().setAutoCommit(false);
+
+                                preparedStatementUpdateCus = c.getDBConnection().prepareStatement(updateCusTableSQL);
+                                preparedStatementUpdateCus.setNull(1, java.sql.Types.INTEGER);
+                                preparedStatementUpdateCus.setNull(2, java.sql.Types.INTEGER);
+                                preparedStatementUpdateCus.setInt(3, userID);
+                                preparedStatementUpdateCus.executeUpdate();
+
+                                preparedStatementUpdateForms = c.getDBConnection().prepareStatement(updateFormTableSQL);
+                                preparedStatementUpdateForms.setInt(1, movieID);
+                                preparedStatementUpdateForms.setInt(2, formatID);
+                                preparedStatementUpdateForms.executeUpdate();
+
+                                c.getDBConnection().commit();
+
+                                System.out.println("Done!");
+
+                            } catch (SQLException e) {
+
+                                c.getDBConnection().setAutoCommit(false);
+                                System.out.println(e.getMessage());
+                                c.getDBConnection().rollback();
+                            }
+
+                            running = false;
+                            break;
+
+                        } else if (doReturn.equals("n")) {
+                            System.out.println("Why are you here then? Do you need to change your major to Art History?");
+                            w.promptEnterKey();
+                            running = false;
+                            break;
+                        } else {
+                            System.out.println("That was not an option select again");
+                        }
                 }
-                else {
-                    System.out.println("Why are you here then? Do you need to change your major to Art History?");
-                    break;
-                }
-
                 break;
             } else {
                 System.out.println("The password you have entered is incorrect");

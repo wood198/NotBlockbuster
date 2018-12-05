@@ -113,14 +113,57 @@ public class PrintRental {
 
                     System.out.println("Your movie is in stock in that format!");
 
+                    PreparedStatement preparedStatementUpdateCus = null;
+                    PreparedStatement preparedStatementUpdateForms = null;
+
+                    String updateCusTableSQL = "UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?";
+
+                    String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock - 1, CheckedOut = CheckedOut + 1 WHERE idmovie = ? AND idformat = ?";
+
+                    try {
+
+                        c.getDBConnection().setAutoCommit(false);
+
+                        preparedStatementUpdateCus = c.getDBConnection().prepareStatement(updateCusTableSQL);
+                        preparedStatementUpdateCus.setInt(1, movieID);
+                        preparedStatementUpdateCus.setInt(2, formatID);
+                        preparedStatementUpdateCus.setInt(3, userID);
+                        preparedStatementUpdateCus.executeUpdate();
+
+                        preparedStatementUpdateForms = c.getDBConnection().prepareStatement(updateFormTableSQL);
+                        preparedStatementUpdateForms.setInt(1, movieID);
+                        preparedStatementUpdateForms.setInt(2, formatID);
+                        preparedStatementUpdateForms.executeUpdate();
+
+                        c.getDBConnection().commit();
+
+                        System.out.println("Done!");
+
+                    } catch (SQLException e) {
+
+                        c.getDBConnection().setAutoCommit(false);
+                        System.out.println(e.getMessage());
+                        c.getDBConnection().rollback();
+                    }
+
+//                    c.getDBConnection().setAutoCommit(false);
+//
+//                    try (PreparedStatement stmt1 = c.getDBConnection().prepareStatement("UPDATE customer SET idmovie = movieID, idformat = formatID WHERE idcustomer = userID")) { // Automatic close.
+//                        try (PreparedStatement stmt2 = c.getDBConnection().prepareStatement("UPDATE movieforms SET InStock - 1, CheckedOut + 1 WHERE idmovie = movieID AND idformat = formatID ")) {
+//                            c.getDBConnection().commit();
+//                        }
+//                    } catch (SQLException ex) {
+//                        ex.printStackTrace();
+//                        c.getDBConnection().rollback()
+
                     //update their customer table with the new rented updates to her idmovie and her idformat
-                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
-                            "UPDATE movieforms SET InStock - 1, CheckedOut + 1 WHERE idmovie = ? AND idformat = ? COMMIT TRANSACTION");
-                    updateCustomersRental.setInt(1, movieID);
-                    updateCustomersRental.setInt(2, formatID);
-                    updateCustomersRental.setInt(3, userID);
-                    updateCustomersRental.setInt(4, movieID);
-                    updateCustomersRental.setInt(5, formatID);
+//                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?;" +
+//                            "UPDATE movieforms SET InStock - 1, CheckedOut + 1 WHERE idmovie = ? AND idformat = ?; COMMIT; end; ");
+//                    updateCustomersRental.setInt(1, movieID);
+//                    updateCustomersRental.setInt(2, formatID);
+//                    updateCustomersRental.setInt(3, userID);
+//                    updateCustomersRental.setInt(4, movieID);
+//                    updateCustomersRental.setInt(5, formatID);
 
                     //Print out their order for them
                     System.out.println("Here is your order: ");
@@ -149,14 +192,14 @@ public class PrintRental {
                     {
 
                     System.out.println("I'm sorry the movie you wish to rent is not available in that format");
-                    String tryAgain = ("Would you like to select a different film? (y/n) ");
+                    String tryAgain = w.getString("Would you like to select a different film? (y/n) ");
 
                     boolean correct = false;
                     while(!correct) {
-                        if (tryAgain.equals('y')) {
+                        if (tryAgain.equals("y")) {
                             renting = true;
                             correct = true;
-                        } else if (tryAgain.equals('n')) {
+                        } else if (tryAgain.equals("n")) {
                             correct = true;
                             renting = false;
                         } else {
