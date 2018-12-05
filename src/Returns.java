@@ -59,12 +59,12 @@ public class Returns {
 
                     if(doReturn == "y") {
                         PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
-                                "UPDATE movieforms SET InStock = InStock + 1 and CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT or ROLLBACK");
+                                "UPDATE movieforms SET InStock = InStock + 1 and CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
                         updateCustomersRental.setInt(1, movieID);
                         updateCustomersRental.setInt(2, formatID);
                         updateCustomersRental.setInt(3, userID);
-                        updateCustomersRental.setInt(3, movieID);
-                        updateCustomersRental.setInt(3, formatID);
+                        updateCustomersRental.setInt(4, movieID);
+                        updateCustomersRental.setInt(5, formatID);
                         returned = true;
                     }
                     else {
@@ -110,7 +110,51 @@ public class Returns {
 
             if (pass.equals(retrievedPassword)) {
                 //TODO: tell the user what movie they currently have rented
+                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idcustomer = ?");
+                stat.setInt(1, userID);
+                rs = stat.executeQuery();
+                int movieID = -1;
+                int formatID = -1;
+                while(rs.next()) {
+                    movieID = rs.getInt("idmovie");
+                    formatID = rs.getInt("idformat");
+                }
+
+                PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT stockdetails.Title, formats.FormatType" +
+                        " FROM movieforms\n" +
+                        "JOIN stockdetails ON movieforms.idmovie = stockdetails.idmovie\n" +
+                        "JOIN formats ON movieforms.idformat = formats.idformat");
+                rs = checkout.executeQuery();
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columnsNumber = rsmd.getColumnCount();
+                while (rs.next()) {
+                    for (int i = 1; i <= columnsNumber; i++) {
+                        if (i > 1) System.out.print("\t");
+                        String columnValue = rs.getString(i);
+                        System.out.print(columnValue);
+                    }
+                    System.out.println("");
+                }
+
                 //TODO: ask if they wish to return it
+                String doReturn = w.getString("Would you like to return your Movie? (y/n)");
+
+                if(doReturn == "y") {
+                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
+                            "UPDATE movieforms SET InStock = InStock + 1 and CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
+                    updateCustomersRental.setInt(1, movieID);
+                    updateCustomersRental.setInt(2, formatID);
+                    updateCustomersRental.setInt(3, userID);
+                    updateCustomersRental.setInt(4, movieID);
+                    updateCustomersRental.setInt(5, formatID);
+
+                    System.out.println("");
+                }
+                else {
+                    System.out.println("Why are you here then? Do you need to change your major to Art History?");
+                    break;
+                }
+
                 //TODO: if yes update movieforms table and customer table
                 //TODO: if no "What the frick are you doing on this page then?"
                 //TODO: Once things are sorted out: "Have a nice day!"
