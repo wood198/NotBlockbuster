@@ -32,12 +32,7 @@ public class Returns {
         }
 
         //TODO: CHECK FOR MOVIE,
-        if(count == 0) {
-            System.out.println("You do not have a movie rented");
-            returned = true;
-            w.promptEnterKey();
-        }
-        else if(count > 0) {
+        if(count > 0) {
             System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
             String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
@@ -54,6 +49,12 @@ public class Returns {
             else {
                 returned = false;
             }
+
+        }
+        else {
+            System.out.println("You do not have a movie rented");
+            returned = true;
+            w.promptEnterKey();
         }
         return returned;
     }

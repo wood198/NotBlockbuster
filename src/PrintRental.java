@@ -83,9 +83,6 @@ public class PrintRental {
 
     public void checkout(int userID) throws Exception {
 
-        //throws it to go check if they have a movie already rented
-        r.returnMovieFromOtherClasses(userID);
-
         //if they have returned the movie they had rented then we can rent them a movie
         if (r.returnMovieFromOtherClasses(userID) == true){
             boolean renting = true;
