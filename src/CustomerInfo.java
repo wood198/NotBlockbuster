@@ -19,10 +19,10 @@ public class CustomerInfo {
         boolean digits = false;
         while(!digits) {
             phone = w.getString("Please Enter Your Phone Number (Do not include dashes or parenthesis): ");
-            digits = true;
-
             if (phone.length() < 10) {
                 System.out.println("Phone Number Must Be 10 Digits Long");
+            }else{
+                digits = true;
             }
         }
 
@@ -39,27 +39,13 @@ public class CustomerInfo {
             stat.execute();
 
             //get their id from the table to use later
-            PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ?, LastName = ?, Email = ?, Address = ?, Phone = ?");
+            PreparedStatement ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE FirstName = ? and LastName = ? and Email = ? and Address = ? and Phone = ?");
             ps.setString(1, first_name);
             ps.setString(2, last_name);
             ps.setString(3, email_input);
             ps.setString(4, address_input);
             ps.setString(5, phone);
-            ResultSet rs = ps.executeQuery();
-            int userID = rs.getInt("idcustomer");
-
-
-            //have the user create a password
-            String new_password = w.getString("Please Create A Password: ");
-            ps = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
-            ps.setString(1,new_password);
-            ps.setInt(2,userID);
-
-
-            //tell the user what their ID Number is
-            System.out.println("You now have an account with NotBlockbuster!");
-            ps = c.getDBConnection().prepareStatement("SELECT idcustomer FROM passwords WHERE Password = ?");
-            rs = stat.executeQuery();
+            ResultSet rs = ps.executeQuery();//
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
@@ -71,8 +57,20 @@ public class CustomerInfo {
                 System.out.println("");
             }
             w.promptEnterKey();
+
+            //have the user create a password
+            int userID = w.getInt("Enter Your User ID: ");
+            String new_password = w.getString("Please Create A Password: ");
+            ps = c.getDBConnection().prepareStatement("INSERT INTO passwords (idcustomer, Password) VALUES (?,?)");
+            ps.setInt(1,userID);
+            ps.setString(2,new_password);
+            ps.execute();
+
+            System.out.println("You now have an account with Not Blockbuster!");
+
         }
         catch(SQLException ex){
+            ex.printStackTrace();
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());

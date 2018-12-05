@@ -25,10 +25,23 @@ public class Search {
                 }
                 System.out.println("");
             }
-            w.promptEnterKey();
 
             //ask what format they want
             int formatID = w.getInt("Which of these formats would you like the movie you rent to be in? ");
+
+            stat = c.getDBConnection().prepareStatement("SELECT COUNT(*) FROM movieforms WHERE InStock > 0 AND idformat = ?");
+            stat.setInt(1, formatID);
+            rs = stat.executeQuery();
+            rsmd = rs.getMetaData();
+            columnsNumber = rsmd.getColumnCount();
+            while (rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print("\t");
+                    String columnValue = rs.getString(i);
+                    System.out.print("Number of Movies Available in that Format: " + columnValue);
+                }
+                System.out.println("");
+            }
 
             //Print all the movies in stock
             stat = c.getDBConnection().prepareStatement("SELECT stockdetails.idmovie, Title\n" +

@@ -12,8 +12,9 @@ public class Returns {
         Scanner in = new Scanner(System.in);
         boolean returned = false;
         int tries = 3;
-        while (tries > 0) {
-            String pass = w.getString("Enter Your Password: ");
+        boolean correctPassword = true;
+        while (correctPassword) {
+            String pass = w.getString("Confirm Your Password: ");
 
             PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT Password FROM passwords WHERE idcustomer = ?");
             stat.setInt(1, userID);
@@ -25,7 +26,7 @@ public class Returns {
 
             if (pass.equals(retrievedPassword)) {
                 //TODO: ENTER ALL THE CHECKING FOR CURRENTLY RENTED MOVIES SQL STUFF HERE
-                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customers WHERE idcustmer = ?");
+                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idcustomer = ?");
                 stat.setInt(1, userID);
                 rs = stat.executeQuery();
                 int movieID = -1;
@@ -35,7 +36,7 @@ public class Returns {
                     formatID = rs.getInt("idformat");
                 }
 
-                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customers WHERE idmovie IS NOT NULL AND idcustomer = ?");
+                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idmovie IS NOT NULL AND idcustomer = ?");
                 stat.setInt(1, userID);
                 rs = stat.executeQuery();
 
@@ -47,6 +48,10 @@ public class Returns {
                 //TODO: CHECK FOR MOVIE,
                 if(count == 0) {
                     System.out.println("You do not have a movie rented");
+                    returned = true;
+                    correctPassword = false;
+                    w.promptEnterKey();
+                    break;
                 }
                 else if(count > 0) {
                     System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
@@ -72,6 +77,9 @@ public class Returns {
             else {
                 System.out.println("The password you have entered is incorrect");
                 tries--;
+                if(tries == 0){
+                    correctPassword = false;
+                }
             }
         }
         if (tries == 0) {

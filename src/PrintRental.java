@@ -22,8 +22,8 @@ public class PrintRental {
 
                     //Gives the User 3 tries to enter the correct password before kicking them back to the main menu
                     int tries = 3;
-                    boolean correctPassword = false;
-                    while (correctPassword == false) {
+                    boolean correctPassword = true;
+                    while (correctPassword) {
                         int userID = w.getInt("Enter Your UserID: ");
                         String pass = w.getString("Enter Your Password: ");
 
@@ -39,13 +39,13 @@ public class PrintRental {
                         //if they enter the correct password they get to rent a movie
                         if (pass.equals(retrievedPassword)) {
                             checkout(userID);
-                            correctPassword = true;
+                            break;
 
                         } else if(!pass.equals(retrievedPassword)){
                             System.out.println("The password you have entered is incorrect");
                             tries--;
                             if(tries == 0){
-                                correctPassword = true;
+                                correctPassword = false;
                             }
                         }
                     }
@@ -65,7 +65,7 @@ public class PrintRental {
                     i.createCustomer();
                     int userID = w.getInt("Enter Your UserID? ");
                     checkout(userID);
-                    renting = false;
+                    break;
 
                 } else {
 
@@ -92,16 +92,16 @@ public class PrintRental {
             while (renting == true) {
 
                 //get the id of the format and movie they want to rent
-                int movieID = w.getInt("Great! Enter the id of movie would you like to rent: ");
+                int movieID = w.getInt("Great! Enter the id of movie you would like to rent: ");
                 int formatID = w.getInt("Enter the id of the format you want to rent it in: ");
 
                 //check if that movie in that format is in stock
                 PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT stockdetails.idmovie, Title\n" +
                         "  FROM stockdetails JOIN movieforms \n" +
                         "    ON stockdetails.idmovie = movieforms.idmovie\n" +
-                        " WHERE InStock > 0 AND idformat = ? AND idmovie = ?");
+                        " WHERE InStock > 0 AND idformat = ? AND movieforms.idmovie = ?");
                 stat.setInt(1, formatID);
-                stat.setInt(1, movieID);
+                stat.setInt(2, movieID);
                 ResultSet rs = stat.executeQuery();
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int columnsNumber = rsmd.getColumnCount();
@@ -116,7 +116,7 @@ public class PrintRental {
 
                     //update their customer table with the new rented updates to her idmovie and her idformat
                     PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
-                            "UPDATE movieforms SET InStock = InStock - 1 and CheckedOut = CheckedOut + 1 WHERE idmovie = ? and idformat = ? COMMIT or ROLLBACK");
+                            "UPDATE movieforms SET InStock = InStock - 1 and CheckedOut = CheckedOut + 1 WHERE idmovie = ? and idformat = ? COMMIT");
                     updateCustomersRental.setInt(1, movieID);
                     updateCustomersRental.setInt(2, formatID);
                     updateCustomersRental.setInt(3, userID);
@@ -125,8 +125,8 @@ public class PrintRental {
 
                     //Print out their order for them
                     System.out.println("Here is your order: ");
-                    PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT customer.FirstName, customer.LastName, customer.Email, stockdetails.Title, format.FormatType" +
-                            " FROM customer, stockdetails, formats " +
+                    PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT customer.FirstName, customer.LastName, customer.Email, stockdetails.Title, formats.FormatType" +
+                            " FROM customer\n" +
                             "JOIN stockdetails ON customer.idmovie = stockdetails.idmovie\n" +
                             "JOIN formats ON customer.idformat = formats.idformat");
                     rs = checkout.executeQuery();
@@ -141,6 +141,7 @@ public class PrintRental {
                     }
 
                     System.out.println("Thank you for renting from us!");
+                    break;
 
                 //The movie is not in stock
                 } else {
