@@ -71,7 +71,7 @@ public class Returns {
                         returned = false;
                     }
                 }
-                break;
+                correctPassword = false;
 
             }
             else {

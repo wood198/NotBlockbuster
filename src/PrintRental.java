@@ -14,7 +14,7 @@ public class PrintRental {
         Scanner in = new Scanner(System.in);
         try{
             boolean renting = true;
-            while (renting = true) {
+            while (renting) {
                 String rentedBefore = w.getString("Have you rented with us before? (y/n) ");
 
                 //the user has an account with Not Blockbuster
@@ -58,7 +58,7 @@ public class PrintRental {
                             i.createNewPassword();
                         }
                     }
-
+                break;
                 //The user does not have an account with us so they must create an account in order to check out
                 } else if (rentedBefore.equals("n")) {
 
@@ -89,7 +89,8 @@ public class PrintRental {
         //if they have returned the movie they had rented then we can rent them a movie
         if (r.returnMovieFromOtherClasses(userID) == true){
             boolean renting = true;
-            while (renting == true) {
+
+            while (renting) {
 
                 //get the id of the format and movie they want to rent
                 int movieID = w.getInt("Great! Enter the id of movie you would like to rent: ");
@@ -112,16 +113,17 @@ public class PrintRental {
 
                 //if it is in stock then continue checkout
                 if (count > 0) {
+
                     System.out.println("Your movie is in stock in that format!");
 
                     //update their customer table with the new rented updates to her idmovie and her idformat
-                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
-                            "UPDATE movieforms SET InStock = InStock - 1 and CheckedOut = CheckedOut + 1 WHERE idmovie = ? and idformat = ? COMMIT");
+                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
+                            "UPDATE movieforms SET InStock - 1, CheckedOut + 1 WHERE idmovie = ? AND idformat = ? COMMIT TRANSACTION");
                     updateCustomersRental.setInt(1, movieID);
                     updateCustomersRental.setInt(2, formatID);
                     updateCustomersRental.setInt(3, userID);
-                    updateCustomersRental.setInt(3, movieID);
-                    updateCustomersRental.setInt(3, formatID);
+                    updateCustomersRental.setInt(4, movieID);
+                    updateCustomersRental.setInt(5, formatID);
 
                     //Print out their order for them
                     System.out.println("Here is your order: ");
@@ -131,7 +133,8 @@ public class PrintRental {
                             "JOIN formats ON customer.idformat = formats.idformat");
                     rs = checkout.executeQuery();
                     rsmd = rs.getMetaData();
-                    while (rs.next()) {
+                    while (rs.next())
+                    {
                         for (int i = 1; i <= columnsNumber; i++) {
                             if (i > 1) System.out.print("\t");
                             String columnValue = rs.getString(i);
@@ -144,13 +147,15 @@ public class PrintRental {
                     break;
 
                 //The movie is not in stock
-                } else {
+                }
+                else
+                    {
 
                     System.out.println("I'm sorry the movie you wish to rent is not available in that format");
                     String tryAgain = ("Would you like to select a different film? (y/n) ");
 
                     boolean correct = false;
-                    while(correct == false) {
+                    while(!correct) {
                         if (tryAgain.equals('y')) {
                             renting = true;
                             correct = true;
@@ -161,6 +166,7 @@ public class PrintRental {
                             tryAgain = w.getString("That was not an option select (y/n) ");
                         }
                     }
+
                 }
             }
 

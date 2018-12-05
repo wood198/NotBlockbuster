@@ -38,8 +38,10 @@ public class WelcomeUser {
                     break;
                 case(5): //Rent Movie
                     p.login();
+                    break;
                 case(6): //Return Movie
                     r.returnMovie();
+                    break;
                 case(7): //Return Movie
                     d.deleteOrUpdate();
                     break;
