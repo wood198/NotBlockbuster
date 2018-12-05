@@ -24,15 +24,42 @@ public class Returns {
             }
 
             if (pass.equals(retrievedPassword)) {
-
                 //TODO: ENTER ALL THE CHECKING FOR CURRENTLY RENTED MOVIES SQL STUFF HERE
+                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customers WHERE idcustmer = ?");
+                stat.setInt(1, userID);
+                rs = stat.executeQuery();
+                int movieID = -1;
+                int formatID = -1;
+                while(rs.next()) {
+                    movieID = rs.getInt("idmovie");
+                    formatID = rs.getInt("idformat");
+                }
                 //TODO: CHECK FOR MOVIE,
-                //TODO: ASK IF THEY WANT TO RETURN (REMIND THEM THAT THEY HAVE TO IN ORDER TO GO THROUGH WITH THEIR NEW RENTAL OR DELETION OF THEIR ACCOUNT),
-                //TODO: IF YES, RETURN THE MOVIE (SETTING CUSTOMER BACK TO NULLS IN THE RIGHT PLACES AND RETURNING THE MOVIE TO THE CORRECT INSTOCK PLACES), return true bc the other methods rely on it
-                //TODO: IF NO, return false for the boolean returned
+                if(movieID == -1) {
+                    System.out.println("You do not have a movie rented");
+                }
+                else {
+                    System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
+                    String doReturn = w.getString("Would you like to return your Movie? (y/n)");
+
+                    if(doReturn == "y") {
+                        PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ? and idformat = ? WHERE idcustomer = ?" +
+                                "UPDATE movieforms SET InStock = InStock + 1 and CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT or ROLLBACK");
+                        updateCustomersRental.setInt(1, movieID);
+                        updateCustomersRental.setInt(2, formatID);
+                        updateCustomersRental.setInt(3, userID);
+                        updateCustomersRental.setInt(3, movieID);
+                        updateCustomersRental.setInt(3, formatID);
+                        returned = true;
+                    }
+                    else {
+                        returned = false;
+                    }
+                }
                 break;
 
-            } else {
+            }
+            else {
                 System.out.println("The password you have entered is incorrect");
                 tries--;
             }
