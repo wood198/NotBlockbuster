@@ -11,82 +11,48 @@ public class Returns {
 
         Scanner in = new Scanner(System.in);
         boolean returned = false;
-        int tries = 3;
-        boolean correctPassword = true;
-        while (correctPassword) {
-            String pass = w.getString("Confirm Your Password: ");
+        //TODO: ENTER ALL THE CHECKING FOR CURRENTLY RENTED MOVIES SQL STUFF HERE
+        PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idcustomer = ?");
+        stat.setInt(1, userID);
+        ResultSet rs = stat.executeQuery();
+        int movieID = -1;
+        int formatID = -1;
+        while(rs.next()) {
+            movieID = rs.getInt("idmovie");
+            formatID = rs.getInt("idformat");
+        }
 
-            PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT Password FROM passwords WHERE idcustomer = ?");
-            stat.setInt(1, userID);
-            ResultSet rs = stat.executeQuery();
-            String retrievedPassword = null;
-            while (rs.next()) {
-                retrievedPassword = rs.getString("Password");
-            }
+        stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idmovie IS NOT NULL AND idcustomer = ?");
+        stat.setInt(1, userID);
+        rs = stat.executeQuery();
 
-            if (pass.equals(retrievedPassword)) {
-                //TODO: ENTER ALL THE CHECKING FOR CURRENTLY RENTED MOVIES SQL STUFF HERE
-                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idcustomer = ?");
-                stat.setInt(1, userID);
-                rs = stat.executeQuery();
-                int movieID = -1;
-                int formatID = -1;
-                while(rs.next()) {
-                    movieID = rs.getInt("idmovie");
-                    formatID = rs.getInt("idformat");
-                }
+        int count = 0;
+        while (rs.next()) {
+            count++;
+        }
 
-                stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idmovie IS NOT NULL AND idcustomer = ?");
-                stat.setInt(1, userID);
-                rs = stat.executeQuery();
+        //TODO: CHECK FOR MOVIE,
+        if(count == 0) {
+            System.out.println("You do not have a movie rented");
+            returned = true;
+            w.promptEnterKey();
+        }
+        else if(count > 0) {
+            System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
+            String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
-                int count = 0;
-                while (rs.next()) {
-                    count++;
-                }
-
-                //TODO: CHECK FOR MOVIE,
-                if(count == 0) {
-                    System.out.println("You do not have a movie rented");
-                    returned = true;
-                    correctPassword = false;
-                    w.promptEnterKey();
-                    break;
-                }
-                else if(count > 0) {
-                    System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
-                    String doReturn = w.getString("Would you like to return your Movie? (y/n)");
-
-                    if(doReturn == "y") {
-                        PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
-                                "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
-                        updateCustomersRental.setInt(1, movieID);
-                        updateCustomersRental.setInt(2, formatID);
-                        updateCustomersRental.setInt(3, userID);
-                        updateCustomersRental.setInt(4, movieID);
-                        updateCustomersRental.setInt(5, formatID);
-                        returned = true;
-                    }
-                    else {
-                        returned = false;
-                    }
-                }
-                correctPassword = false;
-
+            if(doReturn == "y") {
+                PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN TRANSACTION UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?" +
+                        "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? and idformat = ? COMMIT TRANSACTION");
+                updateCustomersRental.setInt(1, movieID);
+                updateCustomersRental.setInt(2, formatID);
+                updateCustomersRental.setInt(3, userID);
+                updateCustomersRental.setInt(4, movieID);
+                updateCustomersRental.setInt(5, formatID);
+                returned = true;
             }
             else {
-                System.out.println("The password you have entered is incorrect");
-                tries--;
-                if(tries == 0){
-                    correctPassword = false;
-                }
-            }
-        }
-        if (tries == 0) {
-            String changePassOption = w.getString("You have ran out of tries. Would you like to change your password? (y/n) ");
-
-            if (changePassOption.equals("y")) {
-                i.createNewPassword();
+                returned = false;
             }
         }
         return returned;
