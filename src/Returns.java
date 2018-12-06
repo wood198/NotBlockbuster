@@ -7,11 +7,12 @@ public class Returns {
     WelcomeUser w = new WelcomeUser();
     CustomerInfo i = new CustomerInfo();
 
+    //This is the method other methods throw to when they need to see if someone already has a movie rented
     public boolean returnMovieFromOtherClasses(int userID) throws Exception {
 
+        //finds what movie in what format the user might have already rented
         Scanner in = new Scanner(System.in);
         boolean returned = false;
-        //TODO: ENTER ALL THE CHECKING FOR CURRENTLY RENTED MOVIES SQL STUFF HERE
         PreparedStatement stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idcustomer = ?");
         stat.setInt(1, userID);
         ResultSet rs = stat.executeQuery();
@@ -22,6 +23,7 @@ public class Returns {
             formatID = rs.getInt("idformat");
         }
 
+        //Check to see if the user has a movie rented
         stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idmovie IS NOT NULL AND idcustomer = ?");
         stat.setInt(1, userID);
         rs = stat.executeQuery();
@@ -31,7 +33,7 @@ public class Returns {
             count++;
         }
 
-        //TODO: CHECK FOR MOVIE,
+        //if they do have a movie rented have them return it to proceed in the other methods (return true if they return the movie)
         if(count > 0) {
             System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
             String doReturn = w.getString("Would you like to return your Movie? (y/n)");
@@ -45,11 +47,10 @@ public class Returns {
 
                     String updateCusTableSQL = "UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?";
 
-                    String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock - 1, CheckedOut = CheckedOut + 1 WHERE idmovie = ? AND idformat = ?";
+                    String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock + 1, CheckedOut = CheckedOut - 1 WHERE idmovie = ? AND idformat = ?";
 
                     try {
 
-                        c.getDBConnection().setAutoCommit(false);
 
                         preparedStatementUpdateCus = c.getDBConnection().prepareStatement(updateCusTableSQL);
                         preparedStatementUpdateCus.setNull(1, java.sql.Types.INTEGER);
@@ -62,15 +63,13 @@ public class Returns {
                         preparedStatementUpdateForms.setInt(2, formatID);
                         preparedStatementUpdateForms.executeUpdate();
 
-                        c.getDBConnection().commit();
-
                         System.out.println("Done!");
+
+                        returned = true;
 
                     } catch (SQLException e) {
 
-                        c.getDBConnection().setAutoCommit(false);
                         System.out.println(e.getMessage());
-                        c.getDBConnection().rollback();
                     }
 
                     running = false;
@@ -87,15 +86,17 @@ public class Returns {
             }
         }
         else {
-            System.out.println("You do not have a movie rented");
+            System.out.println("You do not have a movie rented. We can continue on.");
             returned = true;
             w.promptEnterKey();
         }
         return returned;
     }
 
+    //the renting method that you can access from the main menu
     public void returnMovie() throws Exception{
 
+        //check their userID and password
         Scanner in = new Scanner(System.in);
         int tries = 3;
         while (tries > 0) {
@@ -110,8 +111,8 @@ public class Returns {
                 retrievedPassword = rs.getString("Password");
             }
 
+            //if their password is correct then returnt the movie
             if (pass.equals(retrievedPassword)) {
-                //TODO: tell the user what movie they currently have rented
                 stat = c.getDBConnection().prepareStatement("SELECT idmovie, idformat FROM customer WHERE idcustomer = ?");
                 stat.setInt(1, userID);
                 rs = stat.executeQuery();
@@ -122,6 +123,8 @@ public class Returns {
                     formatID = rs.getInt("idformat");
                 }
 
+                //tell them what movie they have rented
+                System.out.println("Here is the movie you currently have rented: ");
                 PreparedStatement returns = c.getDBConnection().prepareStatement("SELECT stockdetails.Title, formats.FormatType" +
                         " FROM movieforms\n" +
                         "JOIN stockdetails ON movieforms.idmovie = stockdetails.idmovie\n" +
@@ -141,22 +144,22 @@ public class Returns {
                     System.out.println("");
                 }
 
-                //TODO: ask if they wish to return it
                 boolean running = true;
                     while(running == true) {
                         String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
+                        //if they want to return then return the movie
                         if (doReturn.equals("y")) {
+
                             PreparedStatement preparedStatementUpdateCus = null;
                             PreparedStatement preparedStatementUpdateForms = null;
 
                             String updateCusTableSQL = "UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?";
 
-                            String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock - 1, CheckedOut = CheckedOut + 1 WHERE idmovie = ? AND idformat = ?";
+                            String updateFormTableSQL = "UPDATE movieforms SET InStock = InStock + 1 , CheckedOut = CheckedOut - 1 WHERE idmovie = ? AND idformat = ?";
 
                             try {
 
-                                c.getDBConnection().setAutoCommit(false);
 
                                 preparedStatementUpdateCus = c.getDBConnection().prepareStatement(updateCusTableSQL);
                                 preparedStatementUpdateCus.setNull(1, java.sql.Types.INTEGER);
@@ -169,15 +172,12 @@ public class Returns {
                                 preparedStatementUpdateForms.setInt(2, formatID);
                                 preparedStatementUpdateForms.executeUpdate();
 
-                                c.getDBConnection().commit();
-
                                 System.out.println("Done!");
 
                             } catch (SQLException e) {
 
-                                c.getDBConnection().setAutoCommit(false);
                                 System.out.println(e.getMessage());
-                                c.getDBConnection().rollback();
+
                             }
 
                             running = false;

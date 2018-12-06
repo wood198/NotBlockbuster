@@ -84,7 +84,7 @@ public class PrintRental {
     public void checkout(int userID) throws Exception {
 
         //if they have returned the movie they had rented then we can rent them a movie
-        if (r.returnMovieFromOtherClasses(userID) == true){
+        if (r.returnMovieFromOtherClasses(userID)){
             boolean renting = true;
 
             while (renting) {
@@ -122,8 +122,6 @@ public class PrintRental {
 
                     try {
 
-                        c.getDBConnection().setAutoCommit(false);
-
                         preparedStatementUpdateCus = c.getDBConnection().prepareStatement(updateCusTableSQL);
                         preparedStatementUpdateCus.setInt(1, movieID);
                         preparedStatementUpdateCus.setInt(2, formatID);
@@ -135,42 +133,25 @@ public class PrintRental {
                         preparedStatementUpdateForms.setInt(2, formatID);
                         preparedStatementUpdateForms.executeUpdate();
 
-                        c.getDBConnection().commit();
-
                         System.out.println("Done!");
 
                     } catch (SQLException e) {
 
-                        c.getDBConnection().setAutoCommit(false);
                         System.out.println(e.getMessage());
-                        c.getDBConnection().rollback();
                     }
 
-//                    c.getDBConnection().setAutoCommit(false);
-//
-//                    try (PreparedStatement stmt1 = c.getDBConnection().prepareStatement("UPDATE customer SET idmovie = movieID, idformat = formatID WHERE idcustomer = userID")) { // Automatic close.
-//                        try (PreparedStatement stmt2 = c.getDBConnection().prepareStatement("UPDATE movieforms SET InStock - 1, CheckedOut + 1 WHERE idmovie = movieID AND idformat = formatID ")) {
-//                            c.getDBConnection().commit();
-//                        }
-//                    } catch (SQLException ex) {
-//                        ex.printStackTrace();
-//                        c.getDBConnection().rollback()
-
-                    //update their customer table with the new rented updates to her idmovie and her idformat
-//                    PreparedStatement updateCustomersRental = c.getDBConnection().prepareStatement("BEGIN UPDATE customer SET idmovie = ?, idformat = ? WHERE idcustomer = ?;" +
-//                            "UPDATE movieforms SET InStock - 1, CheckedOut + 1 WHERE idmovie = ? AND idformat = ?; COMMIT; end; ");
-//                    updateCustomersRental.setInt(1, movieID);
-//                    updateCustomersRental.setInt(2, formatID);
-//                    updateCustomersRental.setInt(3, userID);
-//                    updateCustomersRental.setInt(4, movieID);
-//                    updateCustomersRental.setInt(5, formatID);
 
                     //Print out their order for them
+
+                    //TODO: This is kind of printing out
                     System.out.println("Here is your order: ");
-                    PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT customer.FirstName, customer.LastName, customer.Email, stockdetails.Title, formats.FormatType" +
-                            " FROM customer\n" +
-                            "JOIN stockdetails ON customer.idmovie = stockdetails.idmovie\n" +
-                            "JOIN formats ON customer.idformat = formats.idformat");
+                    PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT stockdetails.Title, formats.FormatType, customer.FirstName, customer.LastName " +
+                            " FROM movieforms\n" +
+                            "JOIN stockdetails ON movieforms.idmovie = stockdetails.idmovie\n" +
+                            "JOIN formats ON movieforms.idformat = formats.idformat\n" +
+                            "JOIN customer ON movieforms.idmovie = customer.idmovie and movieforms.idformat = customer.idformat\n" +
+                            "WHERE idcustomer = ?");
+                    checkout.setInt(1,userID);
                     rs = checkout.executeQuery();
                     rsmd = rs.getMetaData();
                     while (rs.next())
@@ -184,6 +165,7 @@ public class PrintRental {
                     }
 
                     System.out.println("Thank you for renting from us!");
+                    w.promptEnterKey();
                     break;
 
                 //The movie is not in stock

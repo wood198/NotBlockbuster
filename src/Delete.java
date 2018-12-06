@@ -37,14 +37,35 @@ public class Delete{
                     //check to see if they currently have a movie rented. If no, delete customer if yes return the movie then delete
                     if (choose == 1) {
 
-                        r.returnMovieFromOtherClasses(userID);
+                        if(r.returnMovieFromOtherClasses(userID)) {
+                            PreparedStatement delC = null;
+                            PreparedStatement delP = null;
 
-                        if(r.returnMovieFromOtherClasses(userID) == true) {
-                            //TODO: this needs to be checked once we have creating a customer operational
-                            PreparedStatement del = c.getDBConnection().prepareStatement("DELETE FROM customer AND passwords WHERE userID = ?");
-                            del.setInt(1, userID);
-                            del.execute();
-                            System.out.println("Your customer account has been deleted from our system");
+                            String deleteCus = "DELETE FROM customer WHERE idcustomer = ?";
+
+                            String deletePass = "DELETE FROM passwords WHERE idcustomer = ?";
+
+                            try {
+
+                                delC = c.getDBConnection().prepareStatement(deleteCus);
+                                delC.setInt(1, userID);
+                                delC.executeUpdate();
+
+                                delP = c.getDBConnection().prepareStatement(deletePass);
+                                delP.setInt(1, userID);
+                                delP.executeUpdate();
+
+                                System.out.println("Your customer account has been deleted from our system");
+
+                            } catch (SQLException e) {
+
+                                System.out.println(e.getMessage());
+                            }
+
+//                            PreparedStatement del = c.getDBConnection().prepareStatement("DELETE FROM customer, passwords WHERE userID = ?");
+//                            del.setInt(1, userID);
+//                            del.execute();
+//                            System.out.println("Your customer account has been deleted from our system");
 
                         } else {
                             System.out.println("You must return your currently rented movie in order to delete your account");

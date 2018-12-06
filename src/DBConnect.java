@@ -11,7 +11,7 @@ public class DBConnect {
 
             }
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/notblockbuster?rewriteBatchedStatements=true&relaxAutoCommit=true", "ashleynw04", "ashynic2");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/notblockbuster?rewriteBatchedStatements=true&relaxAutoCommit=true", "ashleynw04", "-------");
             //conn.setAutoCommit(true);
 
         }
