@@ -10,6 +10,7 @@ public class WelcomeUser {
         Returns r = new Returns();
         Delete d = new Delete();
         PrintRental p = new PrintRental();
+        exportCSV ex = new exportCSV();
 
         boolean loop = true;
 
@@ -46,6 +47,8 @@ public class WelcomeUser {
                     d.deleteOrUpdate();
                     break;
                 case(8): //Generate CSV
+                    ex.generateReport();
+                    break;
                 default:
                     break;
             }
