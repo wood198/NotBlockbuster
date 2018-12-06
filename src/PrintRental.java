@@ -133,7 +133,7 @@ public class PrintRental {
                         preparedStatementUpdateForms.setInt(2, formatID);
                         preparedStatementUpdateForms.executeUpdate();
 
-                        System.out.println("Done!");
+                        System.out.println("Movie Rented to Your Account!");
 
                     } catch (SQLException e) {
 
@@ -168,9 +168,7 @@ public class PrintRental {
                     break;
 
                 //The movie is not in stock
-                }
-                else
-                    {
+                } else {
 
                     System.out.println("I'm sorry the movie you wish to rent is not available in that format");
                     String tryAgain = w.getString("Would you like to select a different film? (y/n) ");

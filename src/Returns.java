@@ -35,7 +35,7 @@ public class Returns {
 
         //if they do have a movie rented have them return it to proceed in the other methods (return true if they return the movie)
         if(count > 0) {
-            System.out.println("WARNING: If you do not return your movie, you cannot rent another or delete your account");
+            System.out.println("WARNING: If you do not return your movie, you cannot proceed");
             String doReturn = w.getString("Would you like to return your Movie? (y/n)");
 
             boolean running = true;
@@ -63,7 +63,7 @@ public class Returns {
                         preparedStatementUpdateForms.setInt(2, formatID);
                         preparedStatementUpdateForms.executeUpdate();
 
-                        System.out.println("Done!");
+                        System.out.println("Movie Returned!");
 
                         returned = true;
 
