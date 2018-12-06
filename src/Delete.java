@@ -32,7 +32,8 @@ public class Delete{
                 if (pass.equals(retrievedPassword)) {
                     int choose = w.getInt("Select an Option: \n" +
                             "1. Delete Account \n" +
-                            "2. Update Profile");
+                            "2. Update Profile \n" +
+                            "");
 
                     //check to see if they currently have a movie rented. If no, delete customer if yes return the movie then delete
                     if (choose == 1) {
