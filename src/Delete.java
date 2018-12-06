@@ -40,23 +40,24 @@ public class Delete{
 
                         if(r.returnMovieFromOtherClasses(userID)) {
                             PreparedStatement delC = null;
-                            PreparedStatement delP = null;
 
                             String deleteCus = "DELETE FROM customer WHERE idcustomer = ?";
 
-                            String deletePass = "DELETE FROM passwords WHERE idcustomer = ?";
-
                             try {
 
-                                delC = c.getDBConnection().prepareStatement(deleteCus);
-                                delC.setInt(1, userID);
-                                delC.executeUpdate();
+                                String deleteAccount = w.getString("Are you sure you want to delete your account? ");
+                                if(deleteAccount.equals("y")) {
+                                    delC = c.getDBConnection().prepareStatement(deleteCus);
+                                    delC.setInt(1, userID);
+                                    delC.executeUpdate();
 
-                                delP = c.getDBConnection().prepareStatement(deletePass);
-                                delP.setInt(1, userID);
-                                delP.executeUpdate();
+                                    System.out.println("Your customer account has been deleted from our system");
 
-                                System.out.println("Your customer account has been deleted from our system");
+                                    w.promptEnterKey();
+                                } else if(deleteAccount.equals("n")){
+                                    System.out.println("Okay!");
+                                    w.promptEnterKey();
+                                }
 
                             } catch (SQLException e) {
 

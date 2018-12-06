@@ -87,20 +87,19 @@ public class CustomerInfo {
 
             int count = 0;
             ResultSet rs = pass.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
             while (rs.next()) {
                 count++;
             }
 
             //have them create a new password if they are verified and update the password table
-            if(count > 0){
+            if(count != 0){
                 System.out.println("You have been verified as the owner of this account");
                 String changePassword = w.getString("Type In Your New Password: ");
 
                 PreparedStatement newPass = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
                 newPass.setString(1, changePassword);
                 newPass.setInt(2, id);
+
             }
             w.promptEnterKey();
 
