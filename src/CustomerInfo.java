@@ -100,6 +100,8 @@ public class CustomerInfo {
                 PreparedStatement newPass = c.getDBConnection().prepareStatement("UPDATE passwords SET Password = ? WHERE idcustomer = ?");
                 newPass.setString(1, changePassword);
                 newPass.setInt(2, id);
+                newPass.executeUpdate();
+
 
             }
             w.promptEnterKey();
