@@ -52,7 +52,7 @@ public class PrintRental {
 
                     //if they mess up 3 times they have to go to change their password
                     if (tries == 0) {
-                        String changePassOption = w.getString("You have ran out of tries. Would you like to change your password? (y/n) ");
+                        String changePassOption = w.getString("You have run out of attempts. Would you like to change your password? (y/n) ");
 
                         if (changePassOption.equals("y")) {
                             i.createNewPassword();
@@ -86,11 +86,11 @@ public class PrintRental {
         //if they have returned the movie they had rented then we can rent them a movie
         if (r.returnMovieFromOtherClasses(userID)){
             boolean renting = true;
-
+            System.out.println("--------------\n Checkout \n--------------");
             while (renting) {
 
                 //get the id of the format and movie they want to rent
-                int movieID = w.getInt("Great! Enter the id of movie you would like to rent: ");
+                int movieID = w.getInt("Ready to Checkout? Enter the id of the movie you would like to rent: ");
                 int formatID = w.getInt("Enter the id of the format you want to rent it in: ");
 
                 //check if that movie in that format is in stock
@@ -111,7 +111,7 @@ public class PrintRental {
                 //if it is in stock then continue checkout
                 if (count > 0) {
 
-                    System.out.println("Your movie is in stock in that format!");
+                    System.out.println("Your Movie is in Stock in that Format!");
 
                     PreparedStatement preparedStatementUpdateCus = null;
                     PreparedStatement preparedStatementUpdateForms = null;
@@ -140,7 +140,6 @@ public class PrintRental {
                         System.out.println(e.getMessage());
                     }
 
-
                     //Print out their order for them
 
                     //TODO: This is kind of printing out
@@ -164,7 +163,7 @@ public class PrintRental {
                         System.out.println("");
                     }
 
-                    System.out.println("Thank you for renting from us!");
+                    System.out.println("Thank You for Renting From Not Blockbuster!");
                     w.promptEnterKey();
                     break;
 

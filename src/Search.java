@@ -43,6 +43,7 @@ public class Search {
                 System.out.println("");
             }
 
+            w.promptEnterKey();
             //Print all the movies in stock
             stat = c.getDBConnection().prepareStatement("SELECT stockdetails.idmovie, Title\n" +
                     "  FROM stockdetails JOIN movieforms \n" +

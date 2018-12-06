@@ -42,8 +42,11 @@ public class WelcomeUser {
                 case(6): //Return Movie
                     r.returnMovie();
                     break;
-                case(7): //Return Movie
+                case(7): //Delete/Update Movie
                     d.deleteOrUpdate();
+                    break;
+                case(8): //Generate CSV
+                default:
                     break;
             }
         }
@@ -58,6 +61,7 @@ public class WelcomeUser {
                            "5. Rent Movie \n" +
                            "6. Return Movie \n" +
                            "7. Delete/Update Customer Account \n" +
+                           "8. Generate CSV File \n" +
                            "0. Quit");
     }
 

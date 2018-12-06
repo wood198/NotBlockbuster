@@ -8,7 +8,7 @@ public class CustomerInfo {
 
     public void createCustomer() throws Exception {
 
-        System.out.println("Create an Account: ");
+        System.out.println("--------------\n Create an Account\n--------------");
 
         //the user inputs all their info
         String first_name = w.getString("Please Enter Your First Name: ");
@@ -80,6 +80,7 @@ public class CustomerInfo {
 
         //have the user verify their information in order to create a new password
         try{
+            System.out.println("--------------\n Create New Password\n--------------");
             int id = w.getInt("Enter Your UserID: ");
             String checkEmail = w.getString("Enter Your Email For Verification: ");
             PreparedStatement pass = c.getDBConnection().prepareStatement("SELECT idcustomer FROM customer WHERE Email = ?");
