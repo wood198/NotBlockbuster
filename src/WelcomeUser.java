@@ -1,3 +1,12 @@
+/* Student Names: Ashley Wood, Zach Jagoda
+ * Student IDs: 2271425, 2274813
+ * Student Emails: wood198@mail.chapman.edu, jagod101@mail.chapman.edu
+ * CPSC 408 - Database Management
+ *
+ * Final Project: Not Blockbuster
+ * WelcomeUser.java
+ */
+
 import java.util.Scanner;
 
 public class WelcomeUser {
@@ -68,12 +77,14 @@ public class WelcomeUser {
                            "0. Quit");
     }
 
+    //String Input Functionality
     public static String getString(String input) {
         System.out.print(input);
         Scanner temp = new Scanner(System.in);
         return temp.nextLine();
     }
 
+    //Float Input Functionality
     public static float getFloat(String input) {
         while (true) {
             String temp = getString(input);
@@ -86,6 +97,7 @@ public class WelcomeUser {
         }
     }
 
+    //Integer Input Functionality
     public static int getInt(String input) {
         while (true) {
             String temp = getString(input);
@@ -98,6 +110,7 @@ public class WelcomeUser {
         }
     }
 
+    //Prompts the User to hit the Enter Key before continuing
     public void promptEnterKey(){
         System.out.println("Press \"ENTER\" to continue...");
         Scanner scanner = new Scanner(System.in);

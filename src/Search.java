@@ -1,3 +1,12 @@
+/* Student Names: Ashley Wood, Zach Jagoda
+ * Student IDs: 2271425, 2274813
+ * Student Emails: wood198@mail.chapman.edu, jagod101@mail.chapman.edu
+ * CPSC 408 - Database Management
+ *
+ * Final Project: Not Blockbuster
+ * Search.java
+ */
+
 import java.sql.*;
 import java.util.*;
 import java.util.Scanner;

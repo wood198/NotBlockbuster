@@ -1,7 +1,7 @@
 # DatabaseFinalProject
 
 Ashley Wood and Zach Jagoda
-Student IDs: 2271425 and 
+Student IDs: 2271425 and 2274813
 Student Emails: wood198@mail.chapman.edu and jagod101@mail.chapman.edu 
 CPSC 408
 
