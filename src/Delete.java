@@ -44,7 +44,6 @@ public class Delete{
                             String deleteCus = "DELETE FROM customer WHERE idcustomer = ?";
 
                             try {
-
                                 String deleteAccount = w.getString("Are you sure you want to delete your account? ");
                                 if(deleteAccount.equals("y")) {
                                     delC = c.getDBConnection().prepareStatement(deleteCus);
