@@ -142,7 +142,6 @@ public class PrintRental {
 
                     //Print out their order for them
 
-                    //TODO: This is kind of printing out
                     System.out.println("Here is your order: ");
                     PreparedStatement checkout = c.getDBConnection().prepareStatement("SELECT stockdetails.Title, formats.FormatType, customer.FirstName, customer.LastName " +
                             " FROM movieforms\n" +

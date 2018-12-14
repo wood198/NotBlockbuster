@@ -29,6 +29,10 @@ CSVs included:
     
 DDL code:
     - DDLandIndexes.sql
+    
+Presentation and Paper:
+    - Database Management Presentation.pdf
+    - Not Blockbuster Database Final Report.pdf
 
 Runtime Errors: No known Runtime Errors
 
